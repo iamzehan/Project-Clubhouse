@@ -5,6 +5,6 @@ logInRouter.get("/", controller.ensureGuest, (req, res) => {
   res.render("login");
 });
 
-// logInRouter.post("/", controller.ensureGuest, controller.signupUserPost);
+logInRouter.post("/", controller.ensureGuest, controller.postLogin);
 
 module.exports = logInRouter;
