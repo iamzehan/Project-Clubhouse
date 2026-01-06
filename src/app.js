@@ -117,15 +117,17 @@ app.use((req, res, next) => {
 /**************************************************
  * Routes
  **************************************************/
-const {ensureGuest, ensureAuth} = require('./controllers/authController');
+const controller = require('./controllers/authController');
 
 // GUEST ROUTES
 // signup route
-app.use("/signup", ensureGuest, routes.signUpRouter);
-app.use("/login", ensureGuest, routes.logInRouter);
+app.use("/signup", controller.ensureGuest, routes.signUpRouter);
+app.use("/login", controller.ensureGuest, routes.logInRouter);
 
 // AUTH ROUTES
-app.use("/", ensureAuth, (req, res) => {
+app.get("/logout", controller.ensureAuth, controller.logout);
+
+app.use("/", controller.ensureAuth, (req, res) => {
   res.render("index");
 });
 
