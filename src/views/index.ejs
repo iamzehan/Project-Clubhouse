@@ -14,7 +14,15 @@
     <div class="container">
       <%- include("./partials/sidebar.js") %>
       <main class="content">
-        <h1 class="title">Welcome back! <span class="code"><%= currentUser.username %></span></h1>
+        <header class="heading">Inbox</header>
+        <div class="message-container">
+          <div class="incoming">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quasi consequatur, perferendis natus architecto quidem consectetur ea maxime corporis minima vitae!
+          </div>
+          <div class="outgoing">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Possimus, consequatur quisquam? Iusto nobis a facere.
+          </div>
+        </div>
       </main>
     </div>
     <% if (process.env.NODE_ENV !== 'production') { %>
