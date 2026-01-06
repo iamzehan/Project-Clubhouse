@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">Join the club!</h1>
+      <main class="form-container">
+        <span class="hero-icon"><i class="mi">people</i></span>
+        <h1 class="title">Sign-up</h1>
+        <form action="/signup" method="POST" class="sign-up">
+          <!-- CSRF Token -->
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <div class="form-group">
+            <label for="first_name"
+              >First Name:
+              <input type="text" name="first_name" placeholder="First Name" />
+            </label>
+            <label for="first_name"
+              >Last Name:
+              <input type="text" name="last_name" placeholder="Last Name" />
+            </label>
+          </div>
+          <label for="username"
+            >Username:
+            <input
+              type="text"
+              name="username"
+              class="username"
+              placeholder="Username"
+              minlength="5"
+              required
+            />
+            <span class="error"></span>
+          </label>
+          <label for="password">
+            Password:
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              id="password"
+              required
+            />
+          </label>
+          <label for="confirm_password">
+            Confirm Password:
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              id="confirm_password"
+              required
+            />
+            <span class="error"></span>
+          </label>
+          <button type="submit" class="primary">Signup</button>
+        </form>
+        <span class="form-footer"> Already have an account? 
+          <a href="/login"><button class="primary light">Login</button>
+        </span>
+      </main>
+    </div>
+    <script>
+      const password = document.querySelector("#password");
+      const confirmPassword = document.querySelector("#confirm_password");
+      const error = document.querySelector("label[for='confirm_password']>.error");
+      let matchedPassword = false;
+      let userNameExists = false;
+          confirmPassword.addEventListener("keyup" || "focus", (e) => {
+            if (e.target.value === password.value) {
+              e.target.style.borderColor = "var(--success)";
+              error.textContent = "Passwords matched!";
+              error.classList.add("success");
+              matchedPassword = true;
+            } else {
+              e.target.style.borderColor = "var(--danger)";
+              error.textContent = "Passwords don't match";
+              error.classList.remove("success");
+              matchedPassword = false;
+            }
+          });
+
+          const form = document.querySelector(".sign-up");
+          const username = document.querySelector(".username");
+          const usernameError = document.querySelector("label[for='username'] > .error");
+          const users = <%-JSON.stringify(users)%>;
+          username.addEventListener("keyup", (e) => {
+          const value = e.target.value.trim();
+          if (value.length < 5) {
+            username.style.borderColor = "";
+            usernameError.textContent = "Username must be at least 5 characters";
+            usernameError.classList.remove("success");
+            return;
+          }
+            const matched = users.find((item)=> item.username === e.target.value);
+            if(!matched){
+              username.style.borderColor = "var(----success)";
+              usernameError.textContent = `'${username.value}' is available`;
+              usernameError.classList.add("success");
+              userNameExists = false;
+            } else{
+              username.style.borderColor = "var(--danger)";
+              usernameError.textContent = `'${username.value}' already exists`;
+              usernameError.classList.remove("success");
+              userNameExists = true;
+            }
+          });
+
+      form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            if (matchedPassword && !userNameExists) {
+              form.submit();
+            }
+          });
+    </script>
+  </body>
+</html>
