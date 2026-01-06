@@ -144,6 +144,7 @@ p {
   border-radius: 2em;
   display: flex;
   align-items: center;
+  color: white;
 }
 .form-container > .title{
   color: var(--primary-color-light);
