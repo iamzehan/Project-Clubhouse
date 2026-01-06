@@ -117,9 +117,18 @@ app.use((req, res, next) => {
 /**************************************************
  * Routes
  **************************************************/
-app.use("/", (req, res) => {
+const {ensureGuest, ensureAuth} = require('./controllers/authController');
+
+// GUEST ROUTES
+// signup route
+app.use("/signup", ensureGuest, routes.signUpRouter);
+
+// AUTH ROUTES
+app.use("/", ensureAuth, (req, res) => {
   res.render("index");
 });
+
+
 
 /**************************************************
  * Server
