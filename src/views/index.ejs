@@ -4,43 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Express Template</title>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/styles2.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
       rel="stylesheet"
     />
   </head>
   <body>
-    <main class="container">
-      <div class="logo-container">
-        <img
-          src="https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fi%2Fhpg6if7btrwilqkidqbe.png"
-          alt="Logo"
-          class="logo"
-        />
-        +
-        <img
-          src="https://nodejs.org/static/images/logo.svg
-"
-          alt="NodeJS"
-        />
-        +
-        <img
-          src="https://img.icons8.com/color/1200/clr_ejs_1.jpg"
-          alt="EJS Logo"
-          class="logo"
-        />
-      </div>
-
-      <h1>Welcome to Your Express Project!</h1>
-      <p>Start building amazing apps with this template.</p>
-      <div class="buttons">
-        <a href="/logout" class="btn">Logout</a>
-        <a href="https://github.com/iamzehan/Express-APP-template" class="btn secondary" target="_blank">GitHub</a>
-      </div>
-    </main>
+    <div class="container">
+      <%- include("./partials/sidebar.js") %>
+      <main class="content">
+        <h1 class="title">Welcome back! <span class="code"><%= currentUser.username %></span></h1>
+      </main>
+    </div>
     <% if (process.env.NODE_ENV !== 'production') { %>
     <script src="http://localhost:35729/livereload.js"></script>
-  <% } %>
+    <% } %>
   </body>
 </html>

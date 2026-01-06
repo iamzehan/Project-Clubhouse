@@ -1,0 +1,156 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0; /* Removes default margins from common elements */
+}
+
+ul,
+ol {
+  list-style: none; /* Removes default bullet points/numbers */
+  padding: 0;
+}
+
+i.mi {
+  font-family: "Material Icons";
+  font-style: normal;
+}
+
+:root{
+  --background-base: whitesmoke;
+  --foreground-base: white;
+  --border-base-1: 1px solid rgba(128, 128, 128, 0.5);
+  --primary-color: #3C467B;
+  --secondary-color: #50589C;
+  --primary-color-light: #636CCB;
+  --secondary-color-light: #6E8CFB;
+  --box-shadow-base: 0px 10px 25px 5px rgba(128, 128, 128, 0.5);
+  --danger: red;
+  --success: green;
+}
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: whitesmoke;
+  color: black;
+  text-align: center;
+}
+
+span.code{
+    background-color: lightgreen;
+    font-weight: normal;
+    padding: 0.25em 0.5em;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    font-size: 1.2rem;
+    border-radius: 0.25em;
+    color: green;
+}
+
+
+.container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  background-color: var(--background-base);
+}
+.content > .title{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 2em;
+    padding: 0.5em;
+}
+.sidebar {
+  height: 100vh;
+  width: 260px;
+  background: var(--primary-color);
+  display: flex;
+}
+
+.side-nav {
+  width: 100%;
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 1em;
+}
+
+.nav-item {
+  width: 100%;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  padding: 0.75em 1em;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--foreground-base);
+  font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+
+.nav-link i.mi {
+  font-size: 22px;
+}
+
+.nav-link:hover {
+  background: var(--primary-color-light);
+  color: white;
+}
+
+.logout .nav-link:hover {
+  background: var(--danger);
+  color: white;
+}
+
+a.nav-link.user{
+    background-color: var(--secondary-color-light)!important;
+    div.profile{
+        right: 1em;
+        background-color: rgba(128, 128, 128, 0.5);
+        border: 1px solid var(--primary-color);
+        aspect-ratio: 1/1;
+        border-radius: 3em;
+        padding: 0.5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        i{
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+    }
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
