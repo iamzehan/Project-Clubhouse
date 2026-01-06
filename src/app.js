@@ -122,6 +122,7 @@ const {ensureGuest, ensureAuth} = require('./controllers/authController');
 // GUEST ROUTES
 // signup route
 app.use("/signup", ensureGuest, routes.signUpRouter);
+app.use("/login", ensureGuest, routes.logInRouter);
 
 // AUTH ROUTES
 app.use("/", ensureAuth, (req, res) => {

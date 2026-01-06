@@ -1,1 +1,2 @@
-exports.signUpRouter = require('./signupRouter')
+exports.signUpRouter = require('./signupRouter');
+exports.logInRouter = require('./loginRouter');

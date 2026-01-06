@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Log-In</title>
+  </head>
+  <body>
+    <div class="container">
+      <main class="form-container">
+        <span class="hero-icon"><i class="mi">person</i></span>
+        <h1 class="title">Log-In</h1>
+        <form action="/login" method="POST" class="form">
+          <label for="username">
+            Username:
+            <input
+              type="text"
+              name="username"
+              placeholder="username"
+              required
+            />
+          </label>
+          <label for="password">
+            Password:
+            <input
+              type="password"
+              name="password"
+              placeholder="password"
+              required
+            />
+          </label>
+          <button type="submit" class="primary">Log in <i class="mi">login</i></button>
+        </form>
+        <span class="form-footer">Already have an account? 
+            <a href="/signup"><button class="primary light">Sign up</button></a>
+        </span>
+      </main>
+    </div>
+  </body>
+</html>
