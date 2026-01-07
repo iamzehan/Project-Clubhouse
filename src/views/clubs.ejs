@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Clubs</title>
+    <link rel="stylesheet" href="/css/styles2.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .add-new {
+        display: flex;
+        padding: 1em;
+        justify-content: end;
+      }
+      .add-new button {
+        padding: 0.5em 1em;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        font-weight: bold;
+      }
+      .clubs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+        gap: 1.5em;
+        padding: 1em;
+      }
+      .club-card {
+        border-radius: 0.75em;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        border: var(--border-base-1);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .club-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        border: none;
+      }
+      .club-card img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+      }
+      .club-info {
+        padding: 0.75em 1em;
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        gap: 0.25em;
+      }
+      .club-info .club-name {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--primary-color);
+      }
+      .club-info .club-role {
+        font-size: 0.85rem;
+        width: fit-content;
+        padding: 0.25em 1em;
+        border-radius: 2em;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+      }
+      .club-info button.primary.light {
+        display: flex;
+        align-items: center;
+        padding: 0.5em 1em;
+        font-weight: bold;
+        width: fit-content;
+        align-self: end;
+        border-radius: 2em;
+      }
+      .club-role.owner {
+        color: white;
+        background-color: var(--primary-color-light);
+        i {
+          color: aqua;
+        }
+      }
+      .club-role.member {
+        color: white;
+        background-color: var(--secondary-color);
+        i {
+          color: var(--secondary-color-light);
+        }
+      }
+      .sub-content {
+        text-align: left;
+        padding: 0.5em;
+        box-shadow: 0 2px 5px -2px gray;
+        .title {
+          color: var(--primary-color);
+        }
+      }
+      .no-clubs {
+        margin: 2em;
+        border: 1px dashed;
+        padding: 5em;
+        border-radius: 0.5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        i {
+          color: gray;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <%- include("./partials/sidebar", { page: 'clubs' }) %>
+      <main class="content">
+        <header class="heading">My Clubs</header>
+
+        <div class="add-new">
+          <a href="/clubs/create">
+            <button class="primary">
+              Create a new club <i class="mi">add</i>
+            </button>
+          </a>
+        </div>
+        <%- include("./partials/myClubs", { title: 'My Clubs', clubs: myClubs })
+        %> <%- include("./partials/otherClubs", { title: 'Other Clubs', clubs:
+        otherClubs }) %>
+      </main>
+    </div>
+
+    <% if (process.env.NODE_ENV !== 'production') { %>
+    <script src="http://localhost:35729/livereload.js"></script>
+    <% } %>
+  </body>
+</html>

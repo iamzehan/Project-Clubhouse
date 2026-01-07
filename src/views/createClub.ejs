@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clubs</title>
+    <link rel="stylesheet" href="/css/styles2.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    dialog.form-container {
+      border: none;
+    }
+    dialog[open].form-container::backdrop{
+        backdrop-filter: blur(15px);
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    main.content{
+        display: flex;
+        flex-direction: column;
+        gap: 5em;
+    }
+    .form-footer{
+        text-align: left;
+        white-space: unset;
+        font-size: 0.75rem;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <%- include("./partials/sidebar", {page: 'clubs'}) %>
+      <main class="content">
+        <header class="heading">Create a Club</header>
+        <dialog class="form-container">
+          <span class="hero-icon"><i class="mi">group_add</i></span>
+          <h1 class="title">Create Your Club</h1>
+          <form action="/clubs/create" method="POST">
+            <!-- Club Name -->
+             <input type="hidden" name="_csrf", value="<%= csrfToken %>">
+            <label>
+              <span>Club Name</span>
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter club name"
+                required
+                minlength="3"
+                maxlength="150"
+              />
+              <!-- validation error (optional) -->
+              <!-- <span class="error">Club name is required</span> -->
+            </label>
+
+            <!-- Club Secret -->
+            <label>
+              <span>Club Secret (optional)</span>
+              <input
+                type="text"
+                name="secret"
+                placeholder="Private invite secret"
+              />
+            </label>
+
+            <!-- Club Image URL -->
+            <label>
+              <span>Club Image URL (optional)</span>
+              <input
+                type="url"
+                name="image_url"
+                placeholder="https://example.com/image.png"
+              />
+            </label>
+
+            <button type="submit" class="primary">Create Club</button>
+          </form>
+
+          <div class="form-footer">
+            <p>Clubs help people connect around shared interests.</p>
+            <a href="/clubs">
+              <button type="button" class="normal">Cancel</button>
+            </a>
+          </div>
+        </dalog>
+      </main>
+    </div>
+    <% if (process.env.NODE_ENV !== 'production') { %>
+    <script src="http://localhost:35729/livereload.js"></script>
+    <script>
+        const dialog = document.querySelector("dialog.form-container");
+        window.onload(dialog.showModal());
+    </script>
+    <% } %>
+  </body>
+</html>
