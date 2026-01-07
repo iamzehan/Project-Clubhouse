@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clubs</title>
+    <link rel="stylesheet" href="/css/styles2.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <%- include("./partials/sidebar.js", {page: 'clubs'}) %>
+      <main class="content">
+        <header class="heading">Clubs</header>
+
+      </main>
+    </div>
+    <% if (process.env.NODE_ENV !== 'production') { %>
+    <script src="http://localhost:35729/livereload.js"></script>
+    <% } %>
+  </body>
+</html>
