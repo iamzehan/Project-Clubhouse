@@ -8,7 +8,7 @@ const varify = async (username, password, done) => {
     const user = await db.getUser(username);
     let match;
     if (user) {
-      match = await bcrypt.compare(password, user.password);
+      match = await bcrypt.compare(password, user.password_hash);
     }
     if (!user) {
       return done(null, false, { message: `User '${username}' does not exist.` });
