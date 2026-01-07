@@ -214,3 +214,134 @@ a.nav-link.user{
     border-left: 18px solid var(--primary-color); 
   }
 }
+
+.form-container{
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3em 1em 5em;
+  border-radius: 0.5em;
+  background-color: white;
+  box-shadow: var(--box-shadow-base);
+  animation: 0.3s fadeInUp ease-in forwards;
+}
+.form-container > .hero-icon{
+  background-color: var(--primary-color-light);
+  font-size: 2.5rem;
+  padding: 0.25em;
+  aspect-ratio: 1/1;
+  border-radius: 2em;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+.form-container > .title{
+  color: var(--primary-color-light);
+}
+.form-container > form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  padding: 2em 0;
+  gap: 0.75em;
+  label{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25em;
+    color: var(--primary-color);
+  }
+  input, button{
+    width: 100%;
+    height: 2.5em;
+    border-radius: 0.25em;
+    padding: 0 0.5em;
+  }
+  input{
+    border: var(--border-base-1);
+  }
+  input:focus{
+    outline: none;
+    border: 2px solid var(--secondary-color);
+  }
+  .error-message{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--danger);
+    border-radius:0.25em; 
+    align-self: center; 
+    width: 100%; 
+    height: 2em; 
+    background-color: rgba(255, 0, 0, 0.459);
+  }
+  .error.success{
+    color: var(--success);
+  }
+  .error{
+    color: var(--danger);
+    font-size: 0.75rem;
+  }
+
+  .form-group{
+    display: flex;
+    gap: 0.5em;
+  }
+}
+
+.form-container > .form-footer{
+  width: 80%;
+  display: flex;
+  align-items: center;
+  color: gray;
+  gap: 1em;
+  > * {
+    flex: 1;
+  }
+  button {
+    width: 100%;
+    height: 2em;
+  }
+}
+
+button.primary{
+  background-color: var(--primary-color);
+  color: white;
+  border: 1px solid var(--primary-color);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  transition: 0.3s all ease-in-out;
+  &:hover{
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    background-color: white;
+  }
+}
+
+button.primary.light{
+  background-color: var(--primary-color-light);
+  color: white;
+  border: 1px solid var(--primary-color-light);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  transition: 0.3s all ease-in-out;
+  &:hover{
+    color: var(--primary-color-light);
+    border-color: var(--primary-color-light);
+    background-color: white;
+  }
+}
+
+button.normal{
+  border: var(--border-base-1);
+  background-color: white;
+  border-radius: 0.25em;
+  color: gray;
+}
+a{
+  text-decoration: none;
+}
