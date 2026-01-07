@@ -247,10 +247,13 @@ exports.getClubWithMemberCount = async (clubId) => {
 // get My clubs
 exports.getUserClubsOrOwned = async (userId) => {
   const SQL = `
-    SELECT DISTINCT
-    c.*,
+SELECT DISTINCT
+    c.id,
+	c.name,
+	c.created_at,
     ci.image_url,
-    COALESCE(cr.name, 'member') AS user_role
+    COALESCE(cr.name, 'member') AS user_role,
+	count(cm.user_id) as total_members
 FROM clubs c
 JOIN clubs_members cm ON cm.club_id = c.id
 LEFT JOIN club_member_roles cmr ON cmr.club_id = c.id AND cmr.user_id = cm.user_id
@@ -258,6 +261,7 @@ LEFT JOIN club_roles cr ON cr.id = cmr.club_role_id
 LEFT JOIN clubs_image ci ON ci.club_id = c.id
 WHERE cm.user_id = $1
    OR (cmr.user_id = $1 AND cr.name = 'owner')
+GROUP BY c.id, ci.image_url, cr.name
 ORDER BY c.created_at DESC;
   `;
   const { rows } = await pool.query(SQL, [userId]);
@@ -268,14 +272,15 @@ ORDER BY c.created_at DESC;
 
 exports.getClubsNotJoined = async (userId) => {
   const SQL = `
-   SELECT c.*,ci.image_url
-    FROM clubs as c
-    LEFT JOIN clubs_members as cm
-    ON c.id = cm.club_id
-    LEFT JOIN clubs_image as ci
-    ON c.id = ci.club_id
-    WHERE cm.user_id != $1
-    ORDER BY c.created_at DESC;
+   SELECT c.id, c.name, ci.image_url, count(cm.user_id) as total_members, c.created_at
+FROM clubs as c
+LEFT JOIN clubs_members as cm
+ON c.id = cm.club_id
+LEFT JOIN clubs_image as ci
+ON c.id = ci.club_id
+WHERE cm.user_id != $1
+GROUP BY c.id, ci.image_url, c.name
+ORDER BY c.created_at DESC;
    `;
   const { rows } = await pool.query(SQL, [userId]);
   return rows;
