@@ -128,6 +128,11 @@ span.code{
   color: white;
 }
 
+.nav-item.active{
+  background-color: var(--primary-color-light);
+  border-radius: 0.5em;
+}
+
 a.nav-link.user{
     background-color: var(--secondary-color-light)!important;
     div.profile{
