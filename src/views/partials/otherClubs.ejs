@@ -15,12 +15,14 @@
             <% } else { %>
               <img src="/images/default-club.png" alt="Default club image" />
             <% } %>
-
             <div class="club-info">
               <span class="club-name"><%= club.name %></span>
-              <button class="primary light join-btn" data-club-id="<%= club.id %>">
-                Join <i class="mi">add</i>
-              </button>
+              <div class="club-info-wrapper">
+                <button class="primary light join-btn" data-club-id="<%= club.id %>">
+                  Join <i class="mi">add</i>
+                </button>
+                <div class="club-members"><i class="mi">people</i><%= club.total_members %></div>
+              </div>
             </div>
           </div>
         </a>

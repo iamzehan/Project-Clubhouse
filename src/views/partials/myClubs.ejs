@@ -14,16 +14,20 @@
         <% } else { %>
         <img src="/images/default-club.png" alt="Default club image" />
         <% } %>
+
         <div class="club-info">
           <span class="club-name"><%= club.name %></span>
-          <span
-            class="club-role <%= club.user_role === 'owner' ? 'owner' : 'member' %>"
-          >
-            <i class="mi"
-              ><%= club.user_role === 'owner' ? 'verified' : 'stars' %></i
+          <div class="club-info-wrapper">
+            <span
+              class="club-role <%= club.user_role === 'owner' ? 'owner' : 'member' %>"
             >
-            <%= club.user_role %>
-          </span>
+              <i class="mi"
+                ><%= club.user_role === 'owner' ? 'verified' : 'stars' %></i
+              >
+              <%= club.user_role %>
+            </span>
+            <div class="club-members"><i class="mi">people</i><%= club.total_members %></div>
+          </div>
         </div>
       </div>
     </a>
