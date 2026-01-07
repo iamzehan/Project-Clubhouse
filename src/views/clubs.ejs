@@ -104,10 +104,13 @@
       }
       .sub-content {
         text-align: left;
+        display: flex;
+        flex-direction: column;
         padding: 0.5em;
         box-shadow: 0 2px 5px -2px gray;
         .title {
           color: var(--primary-color);
+          border-bottom: var(--border-base-1);
         }
       }
       .no-clubs {
@@ -118,6 +121,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 500px;
+        align-self: center;
         i {
           color: gray;
         }
