@@ -1,0 +1,33 @@
+<div class="sub-content">
+  <h1 class="title"><%=title%></h1>
+  <% if (clubs.length === 0) { %>
+  <p style="color: #777" class="no-clubs">
+    You are not a member of any clubs yet. <i class="mi"> heart_broken </i>
+  </p>
+  <% } else { %>
+  <div class="clubs-grid">
+    <% clubs.forEach(club => { %>
+    <a href="/clubs/<%= club.id %>">
+      <div class="club-card">
+        <% if (club.image_url) { %>
+        <img src="<%= club.image_url %>" alt="<%= club.name %> image" />
+        <% } else { %>
+        <img src="/images/default-club.png" alt="Default club image" />
+        <% } %>
+        <div class="club-info">
+          <span class="club-name"><%= club.name %></span>
+          <span
+            class="club-role <%= club.user_role === 'owner' ? 'owner' : 'member' %>"
+          >
+            <i class="mi"
+              ><%= club.user_role === 'owner' ? 'verified' : 'stars' %></i
+            >
+            <%= club.user_role %>
+          </span>
+        </div>
+      </div>
+    </a>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
