@@ -16,6 +16,7 @@ exports.getClubPage = async (req, res) => {
   const club = await db.getClubById(req.params.id);
   const profileImg = await db.getClubImage(req.params.id);
   const members = await db.getClubMembers(req.params.id);
+  const isMember = await db.isUserClubMember(req.params.id, req.user.id);
   // mutate roles of members
   const members_roles = await Promise.all(
   members.map(async (member) => {
@@ -29,7 +30,7 @@ exports.getClubPage = async (req, res) => {
   
 );
   
-  res.render("clubPosts", { myClubs, club, profileImg, members: members_roles });
+  res.render("clubPosts", { myClubs, club, profileImg, members: members_roles, isMember });
 };
 
 exports.createClubGet = async (req, res) => {

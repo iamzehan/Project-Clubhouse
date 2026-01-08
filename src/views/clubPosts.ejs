@@ -99,13 +99,49 @@
       }
       .hero-banner {
         display: flex;
+        align-items: center;
+        gap: 1em;
         color: var(--secondary-color);
+        padding: 1em;
         padding-top: 50px;
-        padding-bottom: 1em;
         border-radius: 0.5em;
-        padding-left: 1em;
         background-color: white;
         box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.541);
+      }
+      .hero-banner > .title{
+        flex: 5;
+        text-align: left;
+      }
+      .hero-banner > .members-count{
+        flex: 0.75;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--secondary-color-light);
+        color: white;
+        gap: 0.25em;
+        border-radius: 0.25em;
+        padding: 0.5em;
+        height: 100%;
+        box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.541);
+      }
+      /* join button */
+      .hero-banner > a{
+        flex:0.75;
+        height: 100%;
+        width: 100%;
+        display: flex;
+      }
+      .hero-banner a> button.primary{
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5em;
+        height: 100%;
+        width: 100%;
+        justify-self: flex-end;
       }
       .section-title {
         color: var(--secondary-color-light);
@@ -215,7 +251,12 @@
               <!-- Club Hero Banner Starts -->
               <div class="hero-banner">
                 <h1 class="title"><%= club.name %></h1>
-                <!-- Join button will go here if user not a member -->
+                <span class="members-count"><i class="mi">people</i><%= members.length %> Members</span>
+                <!-- Only show the join button when user is not a member -->
+                 <%if(!isMember){%>
+                  <a href="/clubs/join/<%=club.id%>"><button class="primary">Join <i class="mi">add</i></button></a>
+                  <%}%>
+                
               </div>
               <!-- Club Hero Banner END -->
 
