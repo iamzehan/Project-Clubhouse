@@ -2,12 +2,12 @@ const db = require("../models/queries");
 const bcrypt = require("bcryptjs");
 const passport = require("../auth/passport");
 
-const pool = require('../models/pool');
+const pool = require("../models/pool");
 
 exports.clubGet = async (req, res) => {
   const myClubs = await db.getUserClubsOrOwned(req.user.id);
   const otherClubs = await db.getClubsNotJoined(req.user.id);
-  res.render("clubs", {myClubs, otherClubs});
+  res.render("clubs", { myClubs, otherClubs });
 };
 
 exports.createClubGet = async (req, res) => {
@@ -67,5 +67,26 @@ exports.createClubPost = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   } finally {
     client.release();
+  }
+};
+
+// JOIN A CLUB
+exports.joinClubGet = async (req, res) => {
+  const image_url = await db.getClubImage(req.params.id);
+  const club = await db.getClubById(req.params.id);
+  const error = req.query?.error || null;
+  res.render("joinClub", { clubId: req.params.id, name: club.name, image_url, error });
+};
+
+exports.joinClubPost = async (req, res) => {
+  const clubId = req.params.id;
+  const { secret } = req.body;
+  const clubSecret = await db.getClubSecret(clubId);
+  const varify = await bcrypt.compare(secret, clubSecret);
+  if(varify){
+    await db.addMemberToClub(clubId, req.user.id);
+    res.redirect("/clubs");
+  }else{
+    res.redirect(`/clubs/join/${clubId}?error=Secret is wrong`)
   }
 };

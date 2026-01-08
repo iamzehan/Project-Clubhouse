@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clubs</title>
+    <link rel="stylesheet" href="/css/styles2.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    dialog.form-container {
+      border: none;
+      .title{
+          font-size: 1.25rem;
+        }
+    }
+    dialog[open].form-container::backdrop{
+        backdrop-filter: blur(15px);
+        background-color: rgba(0, 0, 0, 0.5);
+        
+    }
+    main.content{
+        display: flex;
+        flex-direction: column;
+        gap: 5em;
+    }
+    .club-icon
+      img{
+        height: 5em;
+        aspect-ratio: 1/1;
+        border-radius: 10em;
+        object-fit: cover;
+    }
+    .form-footer{
+        white-space: unset;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <%- include("./partials/sidebar", {page: 'clubs'}) %>
+      <main class="content">
+        <header class="heading">Join</header>
+        <dialog class="form-container">
+          <div class="club-icon"><img src='<%=image_url%>' alt="club_img"/></div>
+          <h1 class="title">Join - <%= name %></h1>
+          <form action="/clubs/join/<%=clubId%>" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <input type="text" name="secret" placeholder="Enter this club's secret" required/>
+            <%if(error){%> <span class="error"><%=error%></span> <%}%>
+            <button type="submit" class="primary">Join</button>
+          </form>
+          <div class="form-footer">
+            <p>Don't want to join? </p>
+            <a href="/clubs">
+              <button type="button" class="normal">Cancel</button>
+            </a>
+          </div>
+        </dalog>
+      </main>
+    </div>
+    <% if (process.env.NODE_ENV !== 'production') { %>
+    <script src="http://localhost:35729/livereload.js"></script>
+    <script>
+        const dialog = document.querySelector("dialog.form-container");
+        window.onload(dialog.showModal());
+    </script>
+    <% } %>
+  </body>
+</html>

@@ -255,7 +255,7 @@ a.nav-link.user{
     gap: 0.25em;
     color: var(--primary-color);
   }
-  input, button{
+  input, button, a{
     width: 100%;
     height: 2.5em;
     border-radius: 0.25em;
@@ -344,4 +344,16 @@ button.normal{
 }
 a{
   text-decoration: none;
+}
+
+.join-club{
+  border: none;
+  background-color: transparent;
+  .form-container{
+    box-shadow: none;
+  }
+  &::backdrop{
+    background-color: rgba(0, 0, 0, 0.575);
+    backdrop-filter: blur(15px);
+  }
 }

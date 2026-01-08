@@ -245,43 +245,81 @@ exports.getClubWithMemberCount = async (clubId) => {
 };
 
 // get My clubs
+// get My clubs (member or owner)
 exports.getUserClubsOrOwned = async (userId) => {
   const SQL = `
-SELECT DISTINCT
-    c.id,
-	c.name,
-	c.created_at,
-    ci.image_url,
-    COALESCE(cr.name, 'member') AS user_role,
-	count(cm.user_id) as total_members
-FROM clubs c
-JOIN clubs_members cm ON cm.club_id = c.id
-LEFT JOIN club_member_roles cmr ON cmr.club_id = c.id AND cmr.user_id = cm.user_id
-LEFT JOIN club_roles cr ON cr.id = cmr.club_role_id
-LEFT JOIN clubs_image ci ON ci.club_id = c.id
-WHERE cm.user_id = $1
-   OR (cmr.user_id = $1 AND cr.name = 'owner')
-GROUP BY c.id, ci.image_url, cr.name
-ORDER BY c.created_at DESC;
+    SELECT
+      c.id,
+      c.name,
+      c.created_at,
+      ci.image_url,
+      COALESCE(cr.name, 'member') AS user_role,
+      COUNT(DISTINCT cm_all.user_id) AS total_members
+    FROM clubs c
+
+    -- user membership (optional)
+    LEFT JOIN clubs_members cm_user
+      ON cm_user.club_id = c.id
+     AND cm_user.user_id = $1
+
+    -- role of the user in this club
+    LEFT JOIN club_member_roles cmr
+      ON cmr.club_id = c.id
+     AND cmr.user_id = $1
+    LEFT JOIN club_roles cr
+      ON cr.id = cmr.club_role_id
+
+    -- all members for counting
+    LEFT JOIN clubs_members cm_all
+      ON cm_all.club_id = c.id
+
+    -- club image
+    LEFT JOIN clubs_image ci
+      ON ci.club_id = c.id
+
+    WHERE
+      cm_user.user_id IS NOT NULL   -- member
+      OR cr.name = 'owner'          -- owner
+
+    GROUP BY
+      c.id,
+      c.name,
+      c.created_at,
+      ci.image_url,
+      cr.name
+
+    ORDER BY c.created_at DESC;
   `;
+
   const { rows } = await pool.query(SQL, [userId]);
   return rows;
 };
+
 
 // get clubs I am not a member of
 
 exports.getClubsNotJoined = async (userId) => {
   const SQL = `
-   SELECT c.id, c.name, ci.image_url, count(cm.user_id) as total_members, c.created_at
-FROM clubs as c
-LEFT JOIN clubs_members as cm
-ON c.id = cm.club_id
-LEFT JOIN clubs_image as ci
-ON c.id = ci.club_id
-WHERE cm.user_id != $1
-GROUP BY c.id, ci.image_url, c.name
+SELECT
+    c.id,
+    c.name,
+    ci.image_url,
+    COUNT(cm.user_id) AS total_members
+FROM clubs c
+LEFT JOIN clubs_image ci
+    ON ci.club_id = c.id
+LEFT JOIN clubs_members cm
+    ON cm.club_id = c.id
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM clubs_members cm2
+    WHERE cm2.club_id = c.id
+      AND cm2.user_id = $1
+)
+GROUP BY c.id, c.name, ci.image_url
 ORDER BY c.created_at DESC;
-   `;
+  `;
+
   const { rows } = await pool.query(SQL, [userId]);
   return rows;
 };
