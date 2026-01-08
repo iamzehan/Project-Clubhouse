@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Clubs</title>
+    <link rel="stylesheet" href="/css/styles2.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .club-content {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+      }
+      .club-posts,
+      .club-members {
+        display: flex;
+        flex-direction: column;
+      }
+      .club-posts {
+        background-color: whitesmoke;
+        width: 80%;
+      }
+
+      .my-clubs {
+        display: flex;
+        padding: 0.5em;
+        overflow-x: auto;
+        width: 100%;
+        gap: 1em;
+      }
+      /* Cards that show clubs the use is a member of*/
+      .my-clubs .club-card {
+        display: flex;
+        flex-direction: column;
+        padding: 0.5em;
+        box-shadow: 0px 2px 5px -2px gray;
+        border-radius: 0.5em;
+        max-width: 120px;
+        background-color: white;
+        gap: 1em;
+        cursor: pointer;
+        transition: 0.3s all ease-in-out;
+
+        img,
+        .img-empty {
+          height: 100px;
+          width: 100px;
+          object-fit: cover;
+          aspect-ratio: 1/1;
+          border-radius: 200px;
+          border: 3px solid var(--secondary-color-light);
+          transition: 0.3s all ease-in-out;
+        }
+        .img-empty {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          border: none;
+          i {
+            background-color: var(--secondary-color);
+            border-radius: 2em;
+            font-size: 1rem;
+            padding: 0.5em;
+          }
+        }
+        .club-name {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-weight: bold;
+          color: var(--primary-color-light);
+        }
+      }
+      /* hover card */
+      .my-clubs a:not(:first-child) .club-card:hover {
+        box-shadow: 0px 4px 10px -2px var(--primary-color-light);
+        transform: translateY(-5px);
+        img {
+          border-color: red;
+        }
+      }
+
+      .hero-cover {
+        max-height: 200px;
+        width: 100%;
+        position: relative;
+        img {
+          height: 180px;
+          width: 100%;
+          object-fit: cover;
+        }
+      }
+      .hero-banner {
+        display: flex;
+        color: var(--secondary-color);
+        padding-top: 50px;
+        padding-bottom: 1em;
+        border-radius: 0.5em;
+        padding-left: 1em;
+        background-color: white;
+        box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.541);
+      }
+      .section-title {
+        color: var(--secondary-color-light);
+        text-align: left;
+      }
+      .club-container {
+        padding: 0.25em 0.5em;
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+      }
+      .club-profile-img {
+        display: flex;
+        height: 120px;
+        aspect-ratio: 1/1;
+        border-radius: 200px;
+        border: 2px solid white;
+        margin-left: 2em;
+        z-index: 100px;
+        position: absolute;
+        top: 160px;
+        object-fit: cover;
+        box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.747);
+      }
+
+      /* Right side bar with members list */
+      .club-members {
+        background-color: #222;
+        width: 20%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2em;
+        padding: 1em;
+        min-width: fit-content;
+      }
+      .club-members-list {
+        display: flex;
+        flex-direction: column;
+        color: white;
+        width: 100%;
+        gap: 0.5em;
+      }
+      .club-members-list > .club-member-list-item {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        gap: 2em;
+        height: 4em;
+        padding: 0 0.5em;
+        border-radius: 0.5em;
+        cursor: pointer;
+        transition: 0.3s background-color ease-in-out;
+        &:hover {
+          background-color: rgba(128, 128, 128, 0.438);
+        }
+      }
+      /* Default member avatar */
+      .club-member-avatar {
+        background-color: gray;
+        color: white;
+        padding: 1em;
+        display: flex;
+        aspect-ratio: 1/1;
+        border-radius: 2em;
+      }
+      .club-member-username {
+        display: flex;
+        align-items: center;
+        gap: 0.25em;
+      }
+      .club-member-badge.owner {
+        color: aqua;
+      }
+      .club-member-badge.admin {
+        color: lightgreen;
+      }
+      header{
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <%- include("./partials/sidebar", { page: 'clubs' }) %>
+      <main class="content">
+        <header class="heading" style="background-color: rgba(255, 255, 255, 0.212); color:black"><%=club.name%></header>
+        <div class="club-content">
+          <div class="club-posts">
+            <!-- Club Cover -->
+            <div class="hero-cover">
+              <img
+                class="cover"
+                src="https://wallpapercave.com/wp/wp5038326.jpg"
+              />
+            </div>
+            <!-- Club Cover END -->
+            <!-- Club Profile Image -->
+            <img
+              src="<%= profileImg%>"
+              alt="profile-img"
+              class="club-profile-img"
+            />
+            <!-- Club Profile Image END (This one is superpositioned over the Cover) -->
+            <!-- Club Container START -->
+            <div class="club-container">
+              <!-- Club Hero Banner Starts -->
+              <div class="hero-banner">
+                <h1 class="title"><%= club.name %></h1>
+                <!-- Join button will go here if user not a member -->
+              </div>
+              <!-- Club Hero Banner END -->
+
+              <!-- My Club Cards -->
+              <div class="my-clubs-wrapper">
+                <h2 class="section-title">My Clubs</h2>
+                <div class="my-clubs">
+                  <a href="/clubs#other" class="href">
+                    <div class="club-card">
+                      <div class="img-empty"><i class="mi">add</i></div>
+                      <span class="club-name">New Club</span>
+                    </div>
+                  </a>
+                  <% myClubs.forEach((club)=> {%>
+                  <a href="/clubs/<%=club.id%>" class="href">
+                    <div class="club-card" style="position: relative">
+                      <img src="<%= club.image_url %>" alt="club_img" />
+                      <span class="club-name"><%= club.name %></span>
+                      <% if(club.user_role==="owner"){ %>
+                      <span
+                        class="club-member-badge owner"
+                        style="position: absolute; right: 0.5em"
+                        ><i class="mi">verified</i></span
+                      >
+                      <% }%>
+                    </div>
+                  </a>
+                  <%}) %>
+                </div>
+              </div>
+              <!-- My Club Cards END -->
+            </div>
+
+            <!-- POSTS Cards will go here -->
+
+            <!-- Club Container END -->
+          </div>
+          <!-- Club Posts END -->
+          <!-- Club member side bar starts -->
+          <aside class="club-members">
+            <!-- Title -->
+            <h2 class="title" style="color: white">Members</h2>
+            <!-- Members lists -->
+            <ul class="club-members-list">
+              <% members.forEach(member=> {%>
+              <!-- Members list Item Start -->
+              <li class="club-member-list-item">
+                <!-- DEFAULT AVATAR -->
+                <span class="club-member-avatar"><i class="mi">person</i></span>
+                <!-- MEMBER USERNAME -->
+                <p class="club-member-username">
+                  <%=member.username%>
+                  <!-- Member Badge -->
+                  <% if(member.role==="owner"){ %>
+                  <span class="club-member-badge owner"
+                    ><i class="mi">verified</i></span
+                  >
+                  <% } else if(member.role==="admin"){ %>
+                  <span class="club-member-badge admin"
+                    ><i class="mi">shield</i></span
+                  >
+                  <% } else{%>
+                  <span class="club-member-badge"><i class="mi">star</i></span>
+                  <%}%>
+                </p>
+              </li>
+              <!-- Members list Item END -->
+              <%}) %>
+            </ul>
+            <!-- Members List END -->
+          </aside>
+        </div>
+      </main>
+    </div>
+
+    <% if (process.env.NODE_ENV !== 'production') { %>
+    <script src="http://localhost:35729/livereload.js"></script>
+    <% } %>
+  </body>
+</html>
