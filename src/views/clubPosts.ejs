@@ -211,6 +211,9 @@
           background-color: rgba(128, 128, 128, 0.438);
         }
       }
+      .club-member-list-item.you{
+        background-color: var(--primary-color);
+      }
       /* Default member avatar */
       .club-member-avatar {
         background-color: gray;
@@ -320,12 +323,12 @@
             <ul class="club-members-list">
               <% members.forEach(member=> {%>
               <!-- Members list Item Start -->
-              <li class="club-member-list-item">
+              <li class="club-member-list-item <%=(member.username===currentUser.username)?'you':''%>">
                 <!-- DEFAULT AVATAR -->
                 <span class="club-member-avatar"><i class="mi">person</i></span>
                 <!-- MEMBER USERNAME -->
                 <p class="club-member-username">
-                  <%=member.username%>
+                  <%=(member.username===currentUser.username)?'You':member.username%>
                   <!-- Member Badge -->
                   <% if(member.role==="owner"){ %>
                   <span class="club-member-badge owner"
