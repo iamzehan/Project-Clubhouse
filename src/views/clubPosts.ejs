@@ -10,22 +10,34 @@
       rel="stylesheet"
     />
     <style>
+      
+      /* This contains the club page content */
       .club-content {
         display: flex;
         width: 100%;
         height: 100%;
         overflow-y: auto;
       }
+
+      /* Two parts of the page */
       .club-posts,
       .club-members {
         display: flex;
         flex-direction: column;
       }
+      
+      /* This is the middle portion of the page */
       .club-posts {
         background-color: whitesmoke;
         width: 80%;
       }
 
+       /* This only happens when the user is seeing the club page as a public user */
+      .club-posts.expand{
+        width: 100%;
+      }
+
+      /* This is the part where the other joined clubs show up */
       .my-clubs {
         display: flex;
         padding: 0.5em;
@@ -230,7 +242,8 @@
       <main class="content">
         <header class="heading" style="background-color: rgba(255, 255, 255, 0.212); color:black"><%=club.name%></header>
         <div class="club-content">
-          <div class="club-posts">
+          <!-- Club Main Posts content Starts -->
+          <div class="club-posts <%=(!isMember)?'expand':''%>">
             <!-- Club Cover -->
             <div class="hero-cover">
               <img
@@ -261,6 +274,7 @@
               <!-- Club Hero Banner END -->
 
               <!-- My Club Cards -->
+              <% if(isMember){%>
               <div class="my-clubs-wrapper">
                 <h2 class="section-title">My Clubs</h2>
                 <div class="my-clubs">
@@ -287,6 +301,7 @@
                   <%}) %>
                 </div>
               </div>
+              <%}%>
               <!-- My Club Cards END -->
             </div>
 
@@ -295,7 +310,9 @@
             <!-- Club Container END -->
           </div>
           <!-- Club Posts END -->
-          <!-- Club member side bar starts -->
+
+          <!-- Club member side bar starts (ONLY SHOW WHEN USER IS A MEMBER) -->
+          <%if(isMember){%> 
           <aside class="club-members">
             <!-- Title -->
             <h2 class="title" style="color: white">Members</h2>
@@ -328,6 +345,8 @@
             </ul>
             <!-- Members List END -->
           </aside>
+          <%}%>
+          <!-- Members sidebar END -->
         </div>
       </main>
     </div>

@@ -30,7 +30,7 @@ exports.getClubPage = async (req, res) => {
   
 );
   
-  res.render("clubPosts", { myClubs, club, profileImg, members: members_roles, isMember });
+  res.render("clubPosts", { myClubs, club, profileImg, members: members_roles, isMember});
 };
 
 exports.createClubGet = async (req, res) => {
