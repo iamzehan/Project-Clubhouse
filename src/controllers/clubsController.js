@@ -10,6 +10,28 @@ exports.clubGet = async (req, res) => {
   res.render("clubs", { myClubs, otherClubs });
 };
 
+
+exports.getClubPage = async (req, res) => {
+  const myClubs = await db.getUserClubsOrOwned(req.user.id);
+  const club = await db.getClubById(req.params.id);
+  const profileImg = await db.getClubImage(req.params.id);
+  const members = await db.getClubMembers(req.params.id);
+  // mutate roles of members
+  const members_roles = await Promise.all(
+  members.map(async (member) => {
+    const role = await db.getUserClubRoles(req.params.id, member.id);
+    return { 
+      ...member, 
+      role: (role.includes("owner")?"owner"
+      :(role.includes("admin")?"admin"
+    :"member")) };
+  })
+  
+);
+  
+  res.render("clubPosts", { myClubs, club, profileImg, members: members_roles });
+};
+
 exports.createClubGet = async (req, res) => {
   res.render("createClub", { error: null });
 };
