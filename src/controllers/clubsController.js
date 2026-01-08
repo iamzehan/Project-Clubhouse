@@ -4,6 +4,11 @@ const passport = require("../auth/passport");
 
 const pool = require('../models/pool');
 
+exports.getJoinForm = async(req, res)=> {
+  const image_url = await db.getClubImage(req.params.id);
+  const club = await db.getClubById(req.params.id);
+  res.render("joinClub", {clubId: req.params.id, name: club.name, image_url})
+}
 exports.clubGet = async (req, res) => {
   const myClubs = await db.getUserClubsOrOwned(req.user.id);
   const otherClubs = await db.getClubsNotJoined(req.user.id);
