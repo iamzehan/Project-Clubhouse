@@ -46,9 +46,10 @@
         <dialog class="form-container">
           <div class="club-icon"><img src='<%=image_url%>' alt="club_img"/></div>
           <h1 class="title">Join - <%= name %></h1>
-          <form action="/join/<%=clubId%>" method="POST">
+          <form action="/clubs/join/<%=clubId%>" method="POST">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <input type="text" name="secret" placeholder="Enter this club's secret" required/>
+            <%if(error){%> <span class="error"><%=error%></span> <%}%>
             <button type="submit" class="primary">Join</button>
           </form>
           <div class="form-footer">
