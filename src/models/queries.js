@@ -1,5 +1,5 @@
 const pool = require("./pool");
-
+const formatPostDate = require("../utils/formatDate");
 exports.getAllUsers = async () => {
   const SQL = "SELECT username from users";
   const { rows } = await pool.query(SQL);
@@ -292,7 +292,10 @@ exports.getUserClubsOrOwned = async (userId) => {
   `;
 
   const { rows } = await pool.query(SQL, [userId]);
-  return rows;
+  return rows.map(post => ({
+  ...post,
+  formattedDate: formatPostDate(post.created_at)
+}));;
 };
 
 
@@ -322,4 +325,42 @@ ORDER BY c.created_at DESC;
 
   const { rows } = await pool.query(SQL, [userId]);
   return rows;
+};
+
+
+// All Posts in a club
+
+// get all the posts
+exports.getClubMessages = async (clubId) => {
+  const SQL = `
+    SELECT
+      cp.id,
+      cp.content,
+      cp.created_at,
+      u.id as member_id,
+      u.username,
+      up.first_name,
+      up.last_name
+    FROM club_posts cp
+    JOIN users u ON u.id = cp.user_id
+    LEFT JOIN user_profile up ON up.user_id = u.id
+    WHERE cp.club_id = $1
+    ORDER BY cp.created_at DESC;
+  `;
+  const { rows } = await pool.query(SQL, [clubId]);
+  return rows.map(post => ({
+  ...post,
+  formattedDate: formatPostDate(post.created_at)
+}));;
+};
+
+// Make Post to the club
+exports.createClubMessage = async (clubId, userId, content) => {
+  const SQL = `
+    INSERT INTO club_posts (club_id, user_id, content)
+    VALUES ($1, $2, $3)
+    RETURNING *;
+  `;
+  const { rows } = await pool.query(SQL, [clubId, userId, content]);
+  return rows[0];
 };

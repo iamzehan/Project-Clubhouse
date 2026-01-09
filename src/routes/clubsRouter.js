@@ -11,4 +11,9 @@ clubsRouter.post("/create", authController.ensureAuth, controller.createClubPost
 clubsRouter.get("/join/{:id}", authController.ensureAuth, controller.joinClubGet);
 clubsRouter.post("/join/{:id}", authController.ensureAuth, controller.joinClubPost);
 
+// Get single Club views
+clubsRouter.get("/:id", authController.ensureAuth, controller.getClubPage);
+
+// Post something
+clubsRouter.post("/:id", authController.ensureAuth, controller.createClubMessagePOST);
 module.exports = clubsRouter;
