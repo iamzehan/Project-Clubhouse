@@ -574,11 +574,11 @@
                       </p>
                       <p class="username">@ <%=(isMember)?post.username : 'anonymous'%>
                       <!-- BADGE -->
-                      <% if(post.role==="owner"){ %>
+                      <% if(post.role==="owner" && isMember){ %>
                         <span class="club-member-badge owner"
                           ><i class="mi">verified</i></span
                         >
-                        <% } else if(post.role==="admin"){ %>
+                        <% } else if(post.role==="admin" && isMember){ %>
                         <span class="club-member-badge admin"
                           ><i class="mi">shield</i></span
                         >
