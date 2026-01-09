@@ -14,30 +14,33 @@
       .club-content {
         display: flex;
         width: 100%;
-        height: 100%;
-        overflow-y: auto;
       }
-
       /* Two parts of the page */
-      .club-posts,
+      .club-content-body,
       .club-members {
         display: flex;
         flex-direction: column;
       }
+      
+      /* This is the middle portion of the page */
+      .club-content-body {
+        background-color: whitesmoke;
+        width: 80%;
+        min-height: 200vh;
+        overflow: scroll;
+        scrollbar-width: none;
+      }
 
       .club-members{
+        height: 100vh;
+        scrollbar-width: none;
+        overflow-y: scroll;
         position: sticky;
         top: 0;
       }
-      
-      /* This is the middle portion of the page */
-      .club-posts {
-        background-color: whitesmoke;
-        width: 80%;
-      }
 
-       /* This only happens when the user is seeing the club page as a public user */
-      .club-posts.expand{
+      /* This only happens when the user is seeing the club page as a public user */
+      .club-content-body.expand {
         width: 100%;
       }
 
@@ -102,7 +105,7 @@
           border-color: red;
         }
       }
-
+      /* Cover photo */
       .hero-cover {
         max-height: 200px;
         width: 100%;
@@ -113,6 +116,7 @@
           object-fit: cover;
         }
       }
+      /* This contains the title of the club join button and members badge */
       .hero-banner {
         display: flex;
         align-items: center;
@@ -124,11 +128,11 @@
         background-color: white;
         box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.541);
       }
-      .hero-banner > .title{
+      .hero-banner > .title {
         flex: 5;
         text-align: left;
       }
-      .hero-banner > .members-count{
+      .hero-banner > .members-count {
         flex: 0.75;
         display: flex;
         flex-wrap: wrap;
@@ -143,13 +147,13 @@
         box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.541);
       }
       /* join button */
-      .hero-banner > a{
-        flex:0.75;
+      .hero-banner > a {
+        flex: 0.75;
         height: 100%;
         width: 100%;
         display: flex;
       }
-      .hero-banner a> button.primary{
+      .hero-banner a > button.primary {
         display: flex;
         flex-wrap: nowrap;
         justify-content: center;
@@ -159,10 +163,13 @@
         width: 100%;
         justify-self: flex-end;
       }
+      /* General Section titles */
       .section-title {
         color: var(--secondary-color-light);
         text-align: left;
       }
+
+      /* This container contains all the other sections except cover photo */
       .club-container {
         padding: 0.25em 0.5em;
         display: flex;
@@ -182,6 +189,15 @@
         top: 120px;
         object-fit: cover;
         box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.747);
+      }
+
+      /* General card styles */
+      .cards-vibe {
+        background-color: white;
+        border-radius: 0.25em;
+        padding: 0.5em;
+        height: 100%;
+        box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.541);
       }
 
       /* Right side bar with members list */
@@ -216,7 +232,7 @@
           background-color: rgba(128, 128, 128, 0.438);
         }
       }
-      .club-member-list-item.you{
+      .club-member-list-item.you {
         background-color: var(--primary-color);
       }
       /* Default member avatar */
@@ -239,19 +255,233 @@
       .club-member-badge.admin {
         color: lightgreen;
       }
-      header{
+      header {
         font-weight: bold;
       }
+      /* Club posts styles */
+      .club-posts {
+        display: flex;
+        flex-direction: column;
+        align-self: left;
+        gap: 1em;
+      }
+      .club-posts > .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        button#create-post {
+          display: flex;
+          gap: 1em;
+          border-radius: 2em;
+          padding: 0.75em 1em;
+        }
+      }
+
+      dialog#form-dialog {
+        display: none;
+      }
+      dialog[open]#form-dialog {
+        display: flex;
+        width: 500px;
+        aspect-ratio: 1/1;
+        z-index: 1000;
+        border: none;
+        border-radius: 0.75em;
+        padding: 0;
+        &::backdrop {
+          backdrop-filter: 15px;
+          background-color: rgba(0, 0, 0, 0.63);
+        }
+        .section-title {
+          display: flex;
+          padding: 0.25em 0.5em;
+          background-color: #222222cb;
+          gap: 0.5em;
+          box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.5);
+          .title-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25em;
+          }
+          .title {
+            font-size: 1.5rem;
+            color: white;
+          }
+          .subtitle {
+            font-size: 0.75rem;
+            color: gray;
+          }
+        }
+        .club-profile-img {
+          display: flex;
+          height: 4rem;
+          width: 4rem;
+          border-radius: 200px;
+          object-fit: cover;
+        }
+        button.close {
+          width: fit-content;
+          aspect-ratio: 1/1;
+          border-radius: 2em;
+          border: none;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: white;
+          font-weight: bolder;
+          font-size: 1.5rem;
+          position: absolute;
+          right: 0.5em;
+          background-color: transparent;
+          &:hover {
+            color: red;
+          }
+        }
+      }
+      dialog[open]#form-dialog form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        gap: 0.5em;
+        margin: 1em;
+        textarea {
+          flex: 1;
+          resize: none;
+          height: 100%;
+          border: none;
+          border-radius: 0.25em;
+          font-family: inherit;
+          font-size: 1rem;
+        }
+        button.primary {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: fit-content;
+          width: fit-content;
+          align-self: flex-end;
+          padding: 0.5em 1em;
+          gap: 0.5em;
+          border-radius: 3em;
+        }
+        textarea:focus {
+          outline-color: transparent;
+        }
+      }
+
+/* Posts Cards Styles */
+/* Poster Wrapper */
+.poster-wrapper {
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0 1em;
+}
+
+/* Avatar */
+.club-member-avatar {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6a85b6, #bac8e0);
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.club-member-avatar i.mi {
+  font-size: 24px;
+}
+
+/* Name & Username */
+.poster-name-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-align: left;
+}
+
+.full-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--secondary-color-light);
+  text-wrap: nowrap;
+}
+
+.username {
+  font-size: 0.85rem;
+  color: #6b7280;
+  text-wrap: nowrap;
+  display: flex;
+  gap: 0.25em;
+}
+
+/* Post Date */
+.post-date {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+/* Post Content */
+.post-content {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #374151;
+  word-wrap: break-word;
+  text-align: justify;
+  padding: 0 2em;
+}
+
     </style>
   </head>
   <body>
+    <!-- Form dialog to create posts-->
+    <dialog class="club-posts form-dialog" id="form-dialog">
+      <div class="section-title" style="justify-content: flex-start;">
+        <img
+          src="<%= profileImg%>"
+          alt="profile-img"
+          class="club-profile-img"
+        />
+        <div class="title-wrapper">
+          <p class="title"><%=club.name%></p>
+          <p class="subtitle">Post to anyone in the group</p>
+        </div>
+        <button class="close"><i class="mi">close</i></button>
+      </div>
+      <form action="/clubs/<%=club.id%>" , method="POST">
+        <input type="hidden" name="_csrf" value="<%=csrfToken%>" />
+        <textarea
+          name="content"
+          id="content"
+          placeholder="What do you want to talk about?"
+          required
+        ></textarea>
+        <button class="primary light" type="submit">
+          Post<i class="mi">send</i>
+        </button>
+      </form>
+    </dialog>
+    <!-- Form Dialog Ends here -->
+
     <div class="container">
       <%- include("./partials/sidebar", { page: 'clubs' }) %>
       <main class="content">
-        <header class="heading" style="background-color: rgba(255, 255, 255, 0.212); color:black"><%=club.name%></header>
+        <header
+          class="heading"
+          style="background-color: white; color: black"
+        >
+          <%=club.name%>
+        </header>
         <div class="club-content">
-          <!-- Club Main Posts content Starts -->
-          <div class="club-posts <%=(!isMember)?'expand':''%>">
+          <!-- Club Content Body START -->
+          <div class="club-content-body <%=(!isMember)?'expand':''%>">
             <!-- Club Cover -->
             <div class="hero-cover">
               <img
@@ -259,33 +489,39 @@
                 src="https://wallpapercave.com/wp/wp5038326.jpg"
               />
               <img
-              src="<%= profileImg%>"
-              alt="profile-img"
-              class="club-profile-img"
-            />
-            <!-- Club Profile Image END (This one is superpositioned over the Cover) -->
+                src="<%= profileImg%>"
+                alt="profile-img"
+                class="club-profile-img"
+              />
+              <!-- Club Profile Image END (This one is superpositioned over the Cover) -->
             </div>
             <!-- Club Cover END -->
             <!-- Club Profile Image -->
-            
+
             <!-- Club Container START -->
             <div class="club-container">
               <!-- Club Hero Banner Starts -->
               <div class="hero-banner">
                 <h1 class="title"><%= club.name %></h1>
-                <span class="members-count"><i class="mi">people</i><%= members.length %> Members</span>
+                <span class="members-count"
+                  ><i class="mi">people</i><%= total_members %> Members</span
+                >
                 <!-- Only show the join button when user is not a member -->
-                 <%if(!isMember){%>
-                  <a href="/clubs/join/<%=club.id%>"><button class="primary">Join <i class="mi">add</i></button></a>
-                  <%}%>
-                
+                <%if(!isMember){%>
+                <a href="/clubs/join/<%=club.id%>"
+                  ><button class="primary">
+                    Join <i class="mi">add</i>
+                  </button></a
+                >
+                <%}%>
               </div>
               <!-- Club Hero Banner END -->
 
-              <!-- My Club Cards -->
+              <!-- My Clubs Wrapper START -->
               <% if(isMember){%>
-              <div class="my-clubs-wrapper">
+              <div class="my-clubs-wrapper" style="max-width: 800px; width: 100%; align-self: center;">
                 <h2 class="section-title">My Clubs</h2>
+                <!-- My Club Cards -->
                 <div class="my-clubs">
                   <a href="/clubs#other" class="href">
                     <div class="club-card">
@@ -293,7 +529,7 @@
                       <span class="club-name">New Club</span>
                     </div>
                   </a>
-                  <% myClubs.forEach((club)=> {%>
+                  <% myClubs?.forEach((club)=> {%>
                   <a href="/clubs/<%=club.id%>" class="href">
                     <div class="club-card" style="position: relative">
                       <img src="<%= club.image_url %>" alt="club_img" />
@@ -311,25 +547,74 @@
                 </div>
               </div>
               <%}%>
-              <!-- My Club Cards END -->
+              <!-- My Clubs Wrapper END -->
+
+              <!-- Club Posts START -->
+               
+              <div class="club-posts" style="max-width: 800px; align-self: center">
+                <h2 class="section-title">
+                  Posts
+                  <% if(isMember){%>
+                  <button class="primary light" id="create-post">
+                    Write<i class="mi">create</i>
+                  </button>
+                  <%}%>
+                </h2>
+                <!-- Posts cards START-->
+                <%posts?.forEach(post=>{%>
+                <div class="club-posts cards-vibe">
+                  <div class="poster-wrapper" style="display: flex; gap: 2em">
+                    <span class="club-member-avatar" style="width: fit-content"
+                      ><i class="mi">person</i>
+                    </span>
+                    
+                    <div class="poster-name-wrapper">
+                      <p class="full-name">
+                        <%=(isMember)?post.first_name+ ' ' + post.last_name : 'Anonymous'%>
+                      </p>
+                      <p class="username">@ <%=(isMember)?post.username : 'anonymous'%>
+                      <!-- BADGE -->
+                      <% if(post.role==="owner"){ %>
+                        <span class="club-member-badge owner"
+                          ><i class="mi">verified</i></span
+                        >
+                        <% } else if(post.role==="admin"){ %>
+                        <span class="club-member-badge admin"
+                          ><i class="mi">shield</i></span
+                        >
+                        <% } else{%>
+                        <span class="club-member-badge"><i class="mi">star</i></span>
+                      <%}%>
+                      </p>
+                    </div>
+                    <div class="post-date">
+                      <%=post.formattedDate%></p>
+                    </div>
+                  </div>
+                  <div class="post-content"><%=post.content%></p></div>
+                </div>
+                <%})%>
+                <!-- Posts cards END -->
+              </div>
+              
+              <!-- Club Posts END -->
             </div>
-
-            <!-- POSTS Cards will go here -->
-
             <!-- Club Container END -->
           </div>
-          <!-- Club Posts END -->
+          <!-- Club Content Body END -->
 
           <!-- Club member side bar starts (ONLY SHOW WHEN USER IS A MEMBER) -->
-          <%if(isMember){%> 
+          <%if(isMember){%>
           <aside class="club-members">
             <!-- Title -->
             <h2 class="title" style="color: white">Members</h2>
             <!-- Members lists -->
             <ul class="club-members-list">
-              <% members.forEach(member=> {%>
+              <% members?.forEach(member=> {%>
               <!-- Members list Item Start -->
-              <li class="club-member-list-item <%=(member.username===currentUser.username)?'you':''%>">
+              <li
+                class="club-member-list-item <%=(member.username===currentUser.username)?'you':''%>"
+              >
                 <!-- DEFAULT AVATAR -->
                 <span class="club-member-avatar"><i class="mi">person</i></span>
                 <!-- MEMBER USERNAME -->
@@ -363,5 +648,14 @@
     <% if (process.env.NODE_ENV !== 'production') { %>
     <script src="http://localhost:35729/livereload.js"></script>
     <% } %>
+    <script>
+      const createPostBtn = document.querySelector("#create-post");
+      const dialog = document.querySelector("dialog#form-dialog");
+      const closeBtn = dialog.querySelector("button.close");
+      createPostBtn.addEventListener("click", (e) => {
+        dialog.showModal();
+      });
+      closeBtn.addEventListener("click", (e) => dialog.close());
+    </script>
   </body>
 </html>
