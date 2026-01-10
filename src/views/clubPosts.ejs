@@ -26,6 +26,7 @@
       .club-content-body {
         background-color: whitesmoke;
         width: 80%;
+        min-height: 100vh;
         padding-bottom: 100px;
         overflow: scroll;
         scrollbar-width: none;
@@ -114,6 +115,13 @@
           height: 180px;
           width: 100%;
           object-fit: cover;
+        }
+        .cover-alt{
+          height: 180px;
+          background-color: gray;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
       }
       /* This contains the title of the club join button and members badge */
@@ -490,10 +498,16 @@
           <div class="club-content-body <%=(!isMember)?'expand':''%>">
             <!-- Club Cover -->
             <div class="hero-cover">
-              <img
+              <% if(club.cover){%>
+                <img
                 class="cover"
-                src="https://wallpapercave.com/wp/wp5038326.jpg"
+                src="<%=club.cover.url%>"
               />
+              <%}
+              else{%>
+                <div class="cover-alt" style="color: white; gap: 1em;"><i class="mi">broken_image</i>No cover photos</div>
+                <%}
+              %>
               <img
                 src="<%= profileImg%>"
                 alt="profile-img"
