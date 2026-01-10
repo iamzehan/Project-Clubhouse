@@ -182,7 +182,8 @@
         width: 120px;
         aspect-ratio: 1/1;
         border-radius: 200px;
-        border: 2px solid white;
+        background-color: white;
+        border: 4px solid transparent;
         margin-left: 2em;
         z-index: 100px;
         position: absolute;
@@ -437,7 +438,17 @@
   text-align: justify;
   padding: 0 2em;
 }
-
+.club-posts {
+  anchor-name: --posts;
+}
+.club-posts > .section-title button{
+  position-anchor: --posts;
+  position: absolute;
+  right: anchor(right);
+  bottom: 20px;
+  background-color: #242424;
+  border: 1px solid #242424;
+}
     </style>
   </head>
   <body>
@@ -473,12 +484,7 @@
     <div class="container">
       <%- include("./partials/sidebar", { page: 'clubs' }) %>
       <main class="content">
-        <header
-          class="heading"
-          style="background-color: white; color: black"
-        >
-          <%=club.name%>
-        </header>
+        <%- include("./partials/header", {page: club.name, logo: 'people'})%>
         <div class="club-content">
           <!-- Club Content Body START -->
           <div class="club-content-body <%=(!isMember)?'expand':''%>">
@@ -551,9 +557,9 @@
 
               <!-- Club Posts START -->
                
-              <div class="club-posts" style="max-width: 800px; align-self: center">
+              <div class="club-posts" style="max-width: 800px; min-width: 500px; align-self: center;">
                 <h2 class="section-title">
-                  Posts
+                  <%= (posts.length>0)?'Posts': '' %>
                   <% if(isMember){%>
                   <button class="primary light" id="create-post">
                     Write<i class="mi">create</i>
