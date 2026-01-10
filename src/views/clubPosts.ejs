@@ -26,7 +26,8 @@
       .club-content-body {
         background-color: whitesmoke;
         width: 80%;
-        min-height: 200vh;
+        min-height: 100vh;
+        padding-bottom: 100px;
         overflow: scroll;
         scrollbar-width: none;
       }
@@ -115,6 +116,13 @@
           width: 100%;
           object-fit: cover;
         }
+        .cover-alt{
+          height: 180px;
+          background-color: gray;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
       }
       /* This contains the title of the club join button and members badge */
       .hero-banner {
@@ -182,7 +190,8 @@
         width: 120px;
         aspect-ratio: 1/1;
         border-radius: 200px;
-        border: 2px solid white;
+        background-color: white;
+        border: 4px solid transparent;
         margin-left: 2em;
         z-index: 100px;
         position: absolute;
@@ -437,13 +446,23 @@
   text-align: justify;
   padding: 0 2em;
 }
-
+.club-posts {
+  anchor-name: --posts;
+}
+.club-posts button#create-post{
+  position-anchor: --posts;
+  position: fixed;
+  right: anchor(right);
+  bottom: 20px;
+  background-color: #242424;
+  border: 1px solid #242424;
+}
     </style>
   </head>
   <body>
     <!-- Form dialog to create posts-->
     <dialog class="club-posts form-dialog" id="form-dialog">
-      <div class="section-title" style="justify-content: flex-start;">
+      <div class="section-title dialog" style="justify-content: flex-start;">
         <img
           src="<%= profileImg%>"
           alt="profile-img"
@@ -473,21 +492,22 @@
     <div class="container">
       <%- include("./partials/sidebar", { page: 'clubs' }) %>
       <main class="content">
-        <header
-          class="heading"
-          style="background-color: white; color: black"
-        >
-          <%=club.name%>
-        </header>
+        <%- include("./partials/header", {page: club.name, logo: 'people'})%>
         <div class="club-content">
           <!-- Club Content Body START -->
           <div class="club-content-body <%=(!isMember)?'expand':''%>">
             <!-- Club Cover -->
             <div class="hero-cover">
-              <img
+              <% if(club.cover){%>
+                <img
                 class="cover"
-                src="https://wallpapercave.com/wp/wp5038326.jpg"
+                src="<%=club.cover.url%>"
               />
+              <%}
+              else{%>
+                <div class="cover-alt" style="color: white; gap: 1em;"><i class="mi">broken_image</i>No cover photos</div>
+                <%}
+              %>
               <img
                 src="<%= profileImg%>"
                 alt="profile-img"
@@ -551,9 +571,9 @@
 
               <!-- Club Posts START -->
                
-              <div class="club-posts" style="max-width: 800px; align-self: center">
+              <div class="club-posts" style="max-width: 800px; min-width: 500px; align-self: center;">
                 <h2 class="section-title">
-                  Posts
+                  <%= (posts.length>0)?'Posts': '' %>
                   <% if(isMember){%>
                   <button class="primary light" id="create-post">
                     Write<i class="mi">create</i>
@@ -574,11 +594,11 @@
                       </p>
                       <p class="username">@ <%=(isMember)?post.username : 'anonymous'%>
                       <!-- BADGE -->
-                      <% if(post.role==="owner"){ %>
+                      <% if(post.role==="owner" && isMember){ %>
                         <span class="club-member-badge owner"
                           ><i class="mi">verified</i></span
                         >
-                        <% } else if(post.role==="admin"){ %>
+                        <% } else if(post.role==="admin" && isMember){ %>
                         <span class="club-member-badge admin"
                           ><i class="mi">shield</i></span
                         >

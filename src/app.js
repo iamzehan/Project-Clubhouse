@@ -126,14 +126,9 @@ app.use("/login", controller.ensureGuest, routes.logInRouter);
 
 // AUTH ROUTES
 app.get("/logout", controller.ensureAuth, controller.logout);
-app.use("/clubs", controller.ensureAuth, routes.clubsRouter)
+app.use("/clubs", routes.clubsRouter)
 
-app.use("/", controller.ensureAuth, (req, res) => {
-  res.render("inbox");
-});
-
-
-
+app.use("/", routes.inboxRouter);
 /**************************************************
  * Server
  **************************************************/
