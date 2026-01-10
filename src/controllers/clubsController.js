@@ -164,7 +164,8 @@ exports.createClubPost = async (req, res) => {
 
     // 5. Optional: Add secret
     if (secret && secret.trim() !== "") {
-      await db.createClubSecret(clubId, secret);
+      const secret_hash = await bcrypt.hash(secret, 10)
+      await db.createClubSecret(clubId, secret_hash);
     }
 
     // 6. Optional: Add image
