@@ -364,3 +364,20 @@ exports.createClubMessage = async (clubId, userId, content) => {
   const { rows } = await pool.query(SQL, [clubId, userId, content]);
   return rows[0];
 };
+
+
+// Get all posts of a club
+exports.getAllClubMessages = async() => {
+  const SQL = `
+    SELECT * FROM club_posts ORDER BY created_at DESC;
+  `
+  const { rows } = await pool.query(SQL);
+  return rows;
+}
+
+// get user Profile 
+exports.getUserProfile = async(userId) => {
+  const SQL = `SELECT * FROM user_profile WHERE user_id=$1`;
+  const {rows} = await pool.query(SQL, [userId]);
+  return rows[0];
+}
