@@ -1,149 +1,228 @@
 const { Pool } = require("pg");
 
 const pool = new Pool({
-  connectionString: process.env.DB_URL_PROD,
-  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+  connectionString: process.env.DATABASE_URL,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : false,
 });
 
-async function createTables() {
+async function initSchema() {
   const client = await pool.connect();
 
   try {
     await client.query("BEGIN");
 
-    /* ================= USERS ================= */
+    /* =========================
+       USERS
+    ========================= */
     await client.query(`
       CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        username VARCHAR(50) UNIQUE NOT NULL,
-        password_hash TEXT NOT NULL,
+        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        username VARCHAR(150) NOT NULL UNIQUE,
+        password TEXT NOT NULL,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
     `);
 
-    /* ================= USER PROFILE ================= */
+    /* =========================
+       USER PROFILE (1–1)
+    ========================= */
     await client.query(`
       CREATE TABLE IF NOT EXISTS user_profile (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        first_name VARCHAR(50),
-        last_name VARCHAR(50),
+        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
+        user_id BIGINT NOT NULL UNIQUE,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        CONSTRAINT fk_user_profile_user
+          FOREIGN KEY (user_id)
+          REFERENCES users(id)
+          ON DELETE CASCADE
       );
     `);
 
-    /* ================= SYSTEM ROLES ================= */
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS roles (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(30) UNIQUE NOT NULL,
-        description TEXT,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      );
-    `);
-
-    /* ================= CLUBS ================= */
+    /* =========================
+       CLUBS
+    ========================= */
     await client.query(`
       CREATE TABLE IF NOT EXISTS clubs (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        description TEXT,
-        secret_hash TEXT,
-        created_by INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        name VARCHAR(150) NOT NULL UNIQUE,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
     `);
 
-    /* ================= CLUB IMAGE ================= */
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS clubs_image (
-        id SERIAL PRIMARY KEY,
-        club_id INTEGER UNIQUE NOT NULL REFERENCES clubs(id) ON DELETE CASCADE,
-        image_url TEXT NOT NULL,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      );
-    `);
-
-    /* ================= CLUB MEMBERS ================= */
+    /* =========================
+       CLUB MEMBERS (M–M)
+    ========================= */
     await client.query(`
       CREATE TABLE IF NOT EXISTS clubs_members (
-        club_id INTEGER NOT NULL REFERENCES clubs(id) ON DELETE CASCADE,
-        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        club_id BIGINT NOT NULL,
+        user_id BIGINT NOT NULL,
         joined_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        PRIMARY KEY (club_id, user_id)
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        CONSTRAINT fk_clubs_members_club
+          FOREIGN KEY (club_id)
+          REFERENCES clubs(id)
+          ON DELETE CASCADE,
+        CONSTRAINT fk_clubs_members_user
+          FOREIGN KEY (user_id)
+          REFERENCES users(id)
+          ON DELETE CASCADE,
+        CONSTRAINT uq_club_user UNIQUE (club_id, user_id)
       );
     `);
 
-    /* ================= CLUB ROLES ================= */
+    /* =========================
+       CLUB SECRET (1–1)
+    ========================= */
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS clubs_secret (
+        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        secret TEXT NOT NULL,
+        club_id BIGINT NOT NULL UNIQUE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        CONSTRAINT fk_clubs_secret_club
+          FOREIGN KEY (club_id)
+          REFERENCES clubs(id)
+          ON DELETE CASCADE
+      );
+    `);
+
+    /* =========================
+       CLUB IMAGE (1–1)
+    ========================= */
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS clubs_image (
+        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        image_url TEXT NOT NULL,
+        club_id BIGINT NOT NULL UNIQUE,
+        uploaded_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        CONSTRAINT fk_clubs_image_club
+          FOREIGN KEY (club_id)
+          REFERENCES clubs(id)
+          ON DELETE CASCADE
+      );
+    `);
+
+    /* =========================
+       GLOBAL ROLES
+    ========================= */
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS roles (
+        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        name VARCHAR(50) NOT NULL UNIQUE,
+        description TEXT,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `);
+
+    /* =========================
+       CLUB ROLES
+    ========================= */
     await client.query(`
       CREATE TABLE IF NOT EXISTS club_roles (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(30) UNIQUE NOT NULL,
+        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        name VARCHAR(50) NOT NULL UNIQUE,
         description TEXT
       );
     `);
 
-    /* ================= CLUB MEMBER ROLES ================= */
+    /* =========================
+       CLUB MEMBER ROLES
+    ========================= */
     await client.query(`
       CREATE TABLE IF NOT EXISTS club_member_roles (
-        club_id INTEGER NOT NULL REFERENCES clubs(id) ON DELETE CASCADE,
-        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        club_role_id INTEGER NOT NULL REFERENCES club_roles(id),
+        club_id BIGINT NOT NULL,
+        user_id BIGINT NOT NULL,
+        club_role_id BIGINT NOT NULL,
         assigned_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        PRIMARY KEY (club_id, user_id)
+        PRIMARY KEY (club_id, user_id),
+        FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE CASCADE,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (club_role_id) REFERENCES club_roles(id)
       );
     `);
 
-    /* ================= CLUB POSTS ================= */
+    /* =========================
+       CLUB POSTS
+    ========================= */
     await client.query(`
       CREATE TABLE IF NOT EXISTS club_posts (
-        id SERIAL PRIMARY KEY,
-        club_id INTEGER NOT NULL REFERENCES clubs(id) ON DELETE CASCADE,
-        author_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        club_id BIGINT NOT NULL,
+        author_id BIGINT NOT NULL,
         content TEXT NOT NULL,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        FOREIGN KEY (club_id) REFERENCES clubs(id) ON DELETE CASCADE,
+        FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
       );
     `);
 
-    /* ================= POST REACTIONS ================= */
+    /* =========================
+       UPDATED_AT TRIGGER FN
+    ========================= */
     await client.query(`
-      CREATE TABLE IF NOT EXISTS club_post_reactions (
-        post_id INTEGER NOT NULL REFERENCES club_posts(id) ON DELETE CASCADE,
-        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        reaction VARCHAR(20) NOT NULL,
-        reacted_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        PRIMARY KEY (post_id, user_id)
-      );
+      CREATE OR REPLACE FUNCTION set_updated_at()
+      RETURNS TRIGGER AS $$
+      BEGIN
+        NEW.updated_at = NOW();
+        RETURN NEW;
+      END;
+      $$ LANGUAGE plpgsql;
     `);
 
-    /* ================= INDEXES ================= */
+    /* =========================
+       ATTACH TRIGGERS
+    ========================= */
     await client.query(`
-      CREATE INDEX IF NOT EXISTS idx_club_members_user ON clubs_members(user_id);
-      CREATE INDEX IF NOT EXISTS idx_club_members_club ON clubs_members(club_id);
-      CREATE INDEX IF NOT EXISTS idx_club_posts_club ON club_posts(club_id);
-      CREATE INDEX IF NOT EXISTS idx_club_posts_author ON club_posts(author_id);
+      DO $$
+      DECLARE
+        tbl RECORD;
+      BEGIN
+        FOR tbl IN
+          SELECT tablename FROM pg_tables WHERE schemaname = 'public'
+        LOOP
+          EXECUTE format(
+            'CREATE TRIGGER trg_%1$s_updated_at
+             BEFORE UPDATE ON %1$s
+             FOR EACH ROW
+             EXECUTE FUNCTION set_updated_at();',
+            tbl.tablename
+          );
+        END LOOP;
+      END $$;
     `);
 
-    /* ================= DEFAULT CLUB ROLES ================= */
+    /* =========================
+       DEFAULT CLUB ROLES
+    ========================= */
     await client.query(`
       INSERT INTO club_roles (name, description)
-      VALUES 
-        ('owner', 'Full control of the club'),
-        ('moderator', 'Manages posts and members'),
-        ('member', 'Regular club member')
+      VALUES
+        ('owner', 'Club owner'),
+        ('member', 'Regular member')
       ON CONFLICT (name) DO NOTHING;
     `);
 
     await client.query("COMMIT");
-    console.log("✅ Database schema created successfully");
+    console.log("✅ Schema initialized successfully");
   } catch (err) {
     await client.query("ROLLBACK");
-    console.error("❌ Schema creation failed:", err);
+    console.error("❌ Schema init failed:", err);
+    throw err;
   } finally {
     client.release();
   }
@@ -151,12 +230,9 @@ async function createTables() {
 
 /* Run directly */
 if (require.main === module) {
-  createTables()
+  initSchema()
     .then(() => pool.end())
-    .catch(err => {
-      console.error(err);
-      pool.end();
-    });
+    .catch(() => pool.end());
 }
 
-module.exports = createTables;
+module.exports = initSchema;
