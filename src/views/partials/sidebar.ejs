@@ -1,3 +1,4 @@
+<% if(currentUser){%>
 <aside class="sidebar">
   <nav class="side-nav">
     <ul class="nav-list">
@@ -8,7 +9,7 @@
           <div class="profile">
             <i class="mi">person</i>
           </div>
-          <span class="username">
+          <span class="username" style="color: white">
             <%= currentUser?.username || "User" %>
           </span>
         </a>
@@ -16,9 +17,9 @@
 
       <!-- Create Message -->
       <li class="nav-item <%= page === 'inbox' ? 'active' : '' %>">
-        <a href="/messages/create" class="nav-link">
-          <i class="mi">add_comment</i>
-          <span>Create Message</span>
+        <a href="/" class="nav-link">
+          <i class="mi">inbox</i>
+          <span>Inbox</span>
         </a>
       </li>
 
@@ -41,3 +42,4 @@
     </ul>
   </nav>
 </aside>
+<%}%>
