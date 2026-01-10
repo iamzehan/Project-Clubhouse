@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "create_db":"node ./src/models/createTables.js",
+    "create_db":"node ./src/models/createTables.js && node ./src/models/session.js",
     "start": "node ./src/app.js",
     "dev": "nodemon ./src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
