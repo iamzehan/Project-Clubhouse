@@ -44,7 +44,7 @@ exports.clubGet = async (req, res) => {
 // ACCESS THE CLUB PAGE
 
 // get request
-exports.getClubPage = async (req, res) => {
+exports.getClubPage = async (req, res, next) => {
   const club = await db.getClubById(req.params.id);
   const profileImg = await db.getClubImage(req.params.id);
   const members = await db.getClubMembers(req.params.id);
@@ -59,6 +59,7 @@ exports.getClubPage = async (req, res) => {
     isMember:null,
     posts,
     })
+    return;
   }
   const posts_roles = await Promise.all(
     posts.map(async (post) => {
@@ -163,7 +164,8 @@ exports.createClubPost = async (req, res) => {
 
     // 5. Optional: Add secret
     if (secret && secret.trim() !== "") {
-      await db.createClubSecret(clubId, secret);
+      const secret_hash = await bcrypt.hash(secret, 10)
+      await db.createClubSecret(clubId, secret_hash);
     }
 
     // 6. Optional: Add image

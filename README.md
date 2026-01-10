@@ -1,74 +1,39 @@
-# 🚀 Express App Template
+# Club House
 
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge\&logo=node.js\&logoColor=white)
 ![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge\&logo=express\&logoColor=white)
 ![EJS](https://img.shields.io/badge/EJS-90A93A?style=for-the-badge\&logo=ejs\&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge\&logo=postgresql\&logoColor=white)
-
-A **production-ready Express.js starter template** built to eliminate repetitive setup and help you start coding immediately.
-Designed with **clean architecture**, **developer experience**, and **scalability** in mind.
-
 ---
+
+Create your own secret club. Invite your friends.
 
 ## ✨ Features
+- **Secretive:** Create your secret group
+- **Socialize:** Start posting
+- **Privacy:** Anonymity to outsiders.
 
-This template comes preconfigured with everything you need for modern Express development:
+### 1. Log-in or Sign UP
 
-* 🔁 **Live Reload** (development mode)
-* 🧩 **EJS View Engine** setup
-* 🐘 **PostgreSQL (`pg`)** integration
-* ✅ **Express Validator** for request validation
-* 🗂 **MVC Architecture** (Model–View–Controller)
-* 🔐 **Dotenv** for environment variables
-* 📁 **Static files** configuration
-* 🔄 **JSON & URL-encoded** body parsing middleware
-* 🧱 Clean, extensible project structure
-* 🔐 Authentication with PassportJS
-* 🔑 CSRF token for form data security.
-* 🪪 User Authorization-based access middlewares for routes.
-* ❗Error message handler with Connect-flash.
-* 🍪 Session Cookie management
-* 🗝️ Bycryptjs for password hashing
+![login](./readme_assets/login.png)
+![signup](./readme_assets/signup.png)
 
+### 2. Create Club & View Club
+![create-club](./readme_assets/createClub.png)
+![view-club](./readme_assets/viewClub.png)
+### 3. Create Club Post 
+![post-club](./readme_assets/postClub.png)
+### 4. All available clubs
+![all-clubs](./readme_assets/allClub.png)
 
----
+### 5. Inbox 
+![inbox](./readme_assets/inbox.png)
 
-## 📦 Getting Started
-
-Follow these steps to run the project locally.
-
-### 1️⃣ Clone the repository
-
-```bash
-git clone https://github.com/iamzehan/Express-APP-template.git
-```
-
-### 2️⃣ Install dependencies
-
-```bash
-npm install
-```
-### 3️⃣ Create the session table in your PSQL Database
-```
-node src/models/session.js
-```
-
-### 4️⃣ Run the development server
-
-```bash
-npm run dev
-```
-
-### 5️⃣ Open in browser
-
-```text
-http://localhost:3000
-```
-
----
+### 6. Non-Member Public views
+![inbox-public](./readme_assets/public-inbox.png)
+![club-public](./readme_assets/public-club.png)
 
 ## 🗂 Project Structure
-
 ```text
 Express-APP-template/
 ├── src
@@ -105,18 +70,6 @@ DATABASE_URL=postgresql://user:password@localhost:5432/dbname
 ```
 
 > Refer to `.env.example` for required variables.
-
----
-
-## 🎯 Use Cases
-
-This template is ideal for:
-
-* Rapid prototyping
-* REST APIs with server-side rendering
-* PostgreSQL-backed Express apps
-* Personal or production projects
-* Learning clean Express architecture
 
 ---
 
