@@ -9,8 +9,8 @@ const formatPostDate = require("../utils/formatDate");
 
 exports.inboxGET = async (req, res) => {
   const posts = await db.getAllClubMessages();
-  const postsDetails = await Promise.all(
-    posts.map(async (post) => {
+  const postsDetails = (posts.length> 0)? await Promise.all(
+    posts?.map(async (post) => {
       const club = await db.getClubById(post.club_id);
       const isMember = (req.user)? await db.isUserClubMember(post.club_id, req.user.id):null;
       const row = {...post, isMember, club_name: club.name};
@@ -30,7 +30,7 @@ exports.inboxGET = async (req, res) => {
       }
       return row;
     })
-  );
+  ):null;
   // res.json(posts_members)
   res.render("inbox", {posts: postsDetails});
 };

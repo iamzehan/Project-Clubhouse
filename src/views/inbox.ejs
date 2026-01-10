@@ -140,6 +140,11 @@
                   All Posts
                 </h2>
                 <!-- Posts cards START-->
+                 <% if (!posts) {%>
+                  <div class="cards-vibe" style="min-width: 800px; min-height: 200px; color: gray; display: flex; justify-content: center; align-items: center;">
+                    No posts
+                  </div>
+                  <%}%>
                 <%posts?.forEach(post=>{%>
                 <div class="club-posts cards-vibe">
                   <!-- Club name -->
