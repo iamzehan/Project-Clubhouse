@@ -10,18 +10,176 @@
       rel="stylesheet"
     />
   </head>
+  <style>
+  header{
+    display: flex;
+    justify-content: space-between;
+  }
+  .no-account{
+    display: flex;
+    align-items: center;
+    gap: 2em;
+  }
+  /* Wrapper of the posts */
+  .content-posts{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0.5em;
+  }
+  /* Club posts styles */
+
+    .club-posts {
+      display: flex;
+      flex-direction: column;
+      align-self: left;
+      gap: 1em;
+    }
+    .club-posts > .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+          .club-member-badge.owner {
+      color: aqua;
+    }
+    .club-member-badge.admin {
+      color: lightgreen;
+    }
+      /* Posts Cards Styles */
+/* Poster Wrapper */
+.poster-wrapper {
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0 1em;
+}
+
+/* Avatar */
+.club-member-avatar {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6a85b6, #bac8e0);
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.club-member-avatar i.mi {
+  font-size: 24px;
+}
+
+/* Name & Username */
+.poster-name-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-align: left;
+}
+
+.full-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--secondary-color-light);
+  text-wrap: nowrap;
+}
+
+.username {
+  font-size: 0.85rem;
+  color: #6b7280;
+  text-wrap: nowrap;
+  display: flex;
+  gap: 0.25em;
+}
+
+/* Post Date */
+.post-date {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+/* Post Content */
+.post-content {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #374151;
+  word-wrap: break-word;
+  text-align: justify;
+  padding: 0 2em;
+}
+
+ /* General card styles */
+      .cards-vibe {
+        background-color: white;
+        border-radius: 0.25em;
+        padding: 0.5em;
+        height: 100%;
+        box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.541);
+      }
+  </style>
   <body>
     <div class="container">
-      <%- include("./partials/sidebar", {page: 'inbox'}) %>
+      <% if (currentUser) {%>
+        <%- include("./partials/sidebar", {page: 'inbox'}) %>
+      <%}%>
       <main class="content">
-        <header class="heading">Inbox</header>
-        <div class="message-container">
-          <div class="incoming">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quasi consequatur, perferendis natus architecto quidem consectetur ea maxime corporis minima vitae!
-          </div>
-          <div class="outgoing">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Possimus, consequatur quisquam? Iusto nobis a facere.
-          </div>
+        <%- include("./partials/header", {page: 'Inbox', logo: 'inbox'}) %>
+        <!-- Container-post START -->
+        <div class="content-posts">
+          <div class="club-posts" style="max-width: 800px; align-self: center">
+                <h2 class="section-title" style="align-self: center;">
+                  All Posts
+                </h2>
+                <!-- Posts cards START-->
+                <%posts?.forEach(post=>{%>
+                <div class="club-posts cards-vibe">
+                  <!-- Club name -->
+                <div class="section-title"><a href="/clubs/<%=post.club_id%>"><%=post.club_name%></a></div>
+                  <!-- Avatar -->
+                  <div class="poster-wrapper" style="display: flex; gap: 2em">
+                    <span class="club-member-avatar" style="width: fit-content"
+                      ><i class="mi">person</i>
+                    </span>
+                    <!-- Poster name and username -->
+                    <div class="poster-name-wrapper">
+                      <p class="full-name">
+                        <%=(post.isMember)?post.first_name+ ' ' + post.last_name : 'Anonymous'%>
+                      </p>
+                      <p class="username">@ <%=(post.isMember)?post.username : 'anonymous'%>
+                      <!-- BADGE -->
+                      <% if(post.role==="owner" && post.isMember){ %>
+                        <span class="club-member-badge owner"
+                          ><i class="mi">verified</i></span
+                        >
+                        <% } else if(post.role==="admin" && post.isMember){ %>
+                        <span class="club-member-badge admin"
+                          ><i class="mi">shield</i></span
+                        >
+                        <% } else if(post.isMember){%>
+                        <span class="club-member-badge"><i class="mi">star</i></span>
+                      <%}%>
+                      </p>
+                    </div>
+                    <!-- Post Date -->
+                    <div class="post-date">
+                      <%=post.formattedDate%></p>
+                    </div>
+                  </div>
+                  <div class="post-content"><%=post.content%></p></div>
+                </div>
+                <%})%>
+                <!-- Posts cards END -->
+              </div>
+              
+              <!-- Club Posts END -->
         </div>
       </main>
     </div>
