@@ -44,7 +44,7 @@ exports.clubGet = async (req, res) => {
 // ACCESS THE CLUB PAGE
 
 // get request
-exports.getClubPage = async (req, res) => {
+exports.getClubPage = async (req, res, next) => {
   const club = await db.getClubById(req.params.id);
   const profileImg = await db.getClubImage(req.params.id);
   const members = await db.getClubMembers(req.params.id);
@@ -59,6 +59,7 @@ exports.getClubPage = async (req, res) => {
     isMember:null,
     posts,
     })
+    return;
   }
   const posts_roles = await Promise.all(
     posts.map(async (post) => {
