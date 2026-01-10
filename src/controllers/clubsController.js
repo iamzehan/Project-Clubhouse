@@ -32,7 +32,7 @@ exports.inboxGET = async (req, res) => {
     })
   ):null;
   // res.json(posts_members)
-  res.render("inbox", {posts: postsDetails});
+  res.render("inbox", {title: req.user? "Inbox":"Posts",posts: postsDetails});
 };
 // get available clubs
 exports.clubGet = async (req, res) => {
