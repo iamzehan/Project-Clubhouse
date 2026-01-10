@@ -12,7 +12,7 @@ clubsRouter.get("/join/{:id}", authController.ensureAuth, controller.joinClubGet
 clubsRouter.post("/join/{:id}", authController.ensureAuth, controller.joinClubPost);
 
 // Get single Club views
-clubsRouter.get("/:id", authController.ensureAuth, controller.getClubPage);
+clubsRouter.get("/:id", controller.getClubPage);
 
 // Post something
 clubsRouter.post("/:id", authController.ensureAuth, controller.createClubMessagePOST);
