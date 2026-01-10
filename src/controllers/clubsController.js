@@ -2,9 +2,38 @@ const db = require("../models/queries");
 const bcrypt = require("bcryptjs");
 const passport = require("../auth/passport");
 
-
 const pool = require("../models/pool");
+const formatPostDate = require("../utils/formatDate");
 
+// Inbox get
+
+exports.inboxGET = async (req, res) => {
+  const posts = await db.getAllClubMessages();
+  const postsDetails = await Promise.all(
+    posts.map(async (post) => {
+      const club = await db.getClubById(post.club_id);
+      const isMember = (req.user)? await db.isUserClubMember(post.club_id, req.user.id):null;
+      const row = {...post, isMember, club_name: club.name};
+      if (isMember) {
+        const role = await db.getUserClubRoles(post.club_id, post.user_id);
+        const user = await db.getUserById(post.user_id);
+        const userProfile = await db.getUserProfile(post.user_id);
+        row.formattedDate = formatPostDate(post.created_at);
+        row.first_name = userProfile.first_name;
+        row.last_name = userProfile.last_name;
+        row.username = user.username;
+        row.role = role.includes("owner")
+          ? "owner"
+          : role.includes("admin")
+          ? "admin"
+          : "member";
+      }
+      return row;
+    })
+  );
+  // res.json(posts_members)
+  res.render("inbox", {posts: postsDetails});
+};
 // get available clubs
 exports.clubGet = async (req, res) => {
   const myClubs = await db.getUserClubsOrOwned(req.user.id);
@@ -18,22 +47,33 @@ exports.clubGet = async (req, res) => {
 exports.getClubPage = async (req, res) => {
   const club = await db.getClubById(req.params.id);
   const profileImg = await db.getClubImage(req.params.id);
-  const isMember = await db.isUserClubMember(req.params.id, req.user.id);
   const members = await db.getClubMembers(req.params.id);
   const posts = await db.getClubMessages(req.params.id);
+  if(!req.user){
+    res.render("clubPosts", {
+    myClubs:null,
+    club,
+    profileImg,
+    members: null,
+    total_members: members.length,
+    isMember:null,
+    posts,
+    })
+  }
   const posts_roles = await Promise.all(
-    posts.map(async(post)=> {
+    posts.map(async (post) => {
       const role = await db.getUserClubRoles(req.params.id, post.member_id);
       return {
-          ...post,
-          role: role.includes("owner")
-            ? "owner"
-            : role.includes("admin")
-            ? "admin"
-            : "member",
-        };
+        ...post,
+        role: role.includes("owner")
+          ? "owner"
+          : role.includes("admin")
+          ? "admin"
+          : "member",
+      };
     })
-  )
+  );
+  const isMember = await db.isUserClubMember(req.params.id, req.user.id);
   let members_roles = null;
   let myClubs = null;
   // if the user is a member then do the following query
@@ -54,8 +94,10 @@ exports.getClubPage = async (req, res) => {
       })
     );
     // rearrange so that the logged in user is at the top
-    members_roles = [members_roles.find(member=> member.id===req.user.id),
-       ...members_roles.filter(member=> member.id!==req.user.id)]
+    members_roles = [
+      members_roles.find((member) => member.id === req.user.id),
+      ...members_roles.filter((member) => member.id !== req.user.id),
+    ];
   }
 
   res.render("clubPosts", {
@@ -65,7 +107,7 @@ exports.getClubPage = async (req, res) => {
     members: members_roles,
     total_members: members.length,
     isMember,
-    posts:posts_roles
+    posts: posts_roles,
   });
 };
 
@@ -73,7 +115,7 @@ exports.getClubPage = async (req, res) => {
 
 // post request
 exports.createClubMessagePOST = async (req, res) => {
-  const isMember = await db.isUserClubMember(req.params.id, req.user.id);;
+  const isMember = await db.isUserClubMember(req.params.id, req.user.id);
   if (!isMember) {
     return res.status(403).send("Only members can post");
   }
