@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "create_db":"node ./src/models/createTables.js && node ./src/models/session.js",
+    "create_session": "node ./src/models/session.js",
+    "create_tables":"node ./src/models/createTables.js",
+    "create_db": "npm run create_session && npm run create_tables",
     "start": "node ./src/app.js",
     "dev": "nodemon ./src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
