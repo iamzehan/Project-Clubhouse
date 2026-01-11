@@ -47,8 +47,9 @@ exports.clubGet = async (req, res) => {
 exports.getClubPage = async (req, res, next) => {
   const club = await db.getClubById(req.params.id);
   const profileImg = await db.getClubImage(req.params.id);
-  const members = await db.getClubMembers(req.params.id);
   const posts = await db.getClubMessages(req.params.id);
+  const members = await db.getClubMembers(req.params.id);
+  
   if(!req.user){
     res.render("clubPosts", {
     myClubs:null,
@@ -57,13 +58,16 @@ exports.getClubPage = async (req, res, next) => {
     members: null,
     total_members: members.length,
     isMember:null,
-    posts,
+    posts:[...posts.filter((post)=> post.content)],
     })
     return;
   }
+  const currentUserRole = await db.getUserClubRoles(req.params.id, req.user.id);
   const posts_roles = await Promise.all(
     posts.map(async (post) => {
       const role = await db.getUserClubRoles(req.params.id, post.member_id);
+      
+      const isOwn = post.member_id === req.user.id;
       return {
         ...post,
         role: role.includes("owner")
@@ -71,6 +75,13 @@ exports.getClubPage = async (req, res, next) => {
           : role.includes("admin")
           ? "admin"
           : "member",
+        priviledge: currentUserRole.includes("owner")
+          ? {edit: true, delete: true}
+          : currentUserRole.includes("admin")
+          ? {edit: true, delete: true}
+          : isOwn
+          ?{edit: true, delete: true}
+          : null
       };
     })
   );
@@ -101,7 +112,7 @@ exports.getClubPage = async (req, res, next) => {
     ];
   }
 
-  res.render("clubPosts", {
+  res.render("clubPosts",{
     myClubs,
     club,
     profileImg,
