@@ -174,6 +174,18 @@ exports.editClubMessagePOST = async (req, res) => {
   }
 };
 
+// delete a post
+exports.deleteClubMessagePOST = async(req, res) => {
+  const {club_id, post_id} = req.body;
+  const isDeleted = db.deleteClubPost(post_id, club_id);
+  if(isDeleted){
+    res.redirect(`/clubs/${club_id}`);
+  }
+  else{
+    res.status(401).json({error: "Server Error"});
+  }
+}
+
 // CREATE A CLUB
 // get request
 exports.createClubGet = async (req, res) => {
