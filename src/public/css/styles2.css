@@ -366,3 +366,70 @@ a {
     backdrop-filter: blur(15px);
   }
 }
+
+.club-posts{
+  position: relative;
+}
+
+.post-menu{
+  cursor: pointer;
+  width: fit-content;
+  background-color: white;
+  border: none;
+  align-self: flex-end;
+  display: flex;
+  padding: 0;
+  font-size: larger;
+  &:hover > i{
+    color: black;
+  }
+  i{
+    width: 100%;
+    height: 100%;
+  }
+}
+ul.post-menu-list.cards-vibe{
+  border: var(--border-base-1);
+  position: absolute;
+  position-anchor: --posts;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  top: 30px;
+  right: 10px;
+  padding: 0;
+  transform-origin: top right;
+  transform: scale(0);
+  transition: 0.3s transform ease-in-out;
+  a, form{
+    border-bottom: var(--border-base-1);
+    padding: 0.5em 1em;
+    cursor: pointer;
+    transition: 0.2s all ease-in-out;
+  }
+  *:hover {
+    background-color: var(--primary-color-light);
+    color: white;
+    button{
+      color: white;
+    }
+  }
+  a{
+    text-decoration: none;
+    color: black;
+  }
+  li form{
+    background-color: transparent;
+  }
+  li button{
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+}
+
+ul.post-menu-list.cards-vibe.active{
+  transform: scale(1);
+}

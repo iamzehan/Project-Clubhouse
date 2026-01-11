@@ -1,0 +1,12 @@
+<ul class="post-menu-list cards-vibe" id="list-<%=post_id%>">
+  <a href="/<%=club_id%>/post/edit/<%=post_id%>">Edit</li></a>
+  <li>
+    <form action="/post/delete" method="POST">
+        <input type="hidden" name="_csrf" value="<%=csrfToken%>" />
+      <input type="hidden" name="club_id" value="<%=club_id%>" />
+      <input type="hidden" name="post_id" value="<%=post_id%>" />
+      <button type="submit">Delete</button>
+    </form>
+  </li>
+</ul>
+
