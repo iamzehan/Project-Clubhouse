@@ -456,6 +456,7 @@
   bottom: 20px;
   background-color: #242424;
   border: 1px solid #242424;
+  z-index: 1000;
 }
     </style>
   </head>
@@ -583,6 +584,13 @@
                 <!-- Posts cards START-->
                 <%posts?.forEach(post=>{%>
                 <div class="club-posts cards-vibe">
+                  <%if(post.priviledge)
+                  {%>
+                    <button class="post-menu" id="post-menu">
+                      <i class="mi">more_horiz</i>
+                    </button>
+                    <%- include("./partials/post-menu", {post_id: post.id, club_id: club.id})%>
+                    <%}%>
                   <div class="poster-wrapper" style="display: flex; gap: 2em">
                     <span class="club-member-avatar" style="width: fit-content"
                       ><i class="mi">person</i>
@@ -611,7 +619,7 @@
                       <%=post.formattedDate%></p>
                     </div>
                   </div>
-                  <div class="post-content"><%=post.content%></p></div>
+                  <div class="post-content"><%-post.content%></p></div>
                 </div>
                 <%})%>
                 <!-- Posts cards END -->
@@ -676,6 +684,16 @@
         dialog.showModal();
       });
       closeBtn.addEventListener("click", (e) => dialog.close());
+
+      // post menus e.g. edit delete//
+      const menus = document.querySelectorAll("button#post-menu");
+      menus.forEach(menu=> {
+        const list = menu.nextElementSibling;
+        menu.addEventListener("click", (e)=> {
+          list.classList.toggle("active");
+        })
+      })
+    
     </script>
   </body>
 </html>

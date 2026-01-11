@@ -1,14 +1,15 @@
 const db = require("../models/queries");
 const bcrypt = require("bcryptjs");
-const passport = require("../auth/passport");
-
+const markdown = require("markdown").markdown;
 const pool = require("../models/pool");
 const formatPostDate = require("../utils/formatDate");
 
 // Inbox get
 
 exports.inboxGET = async (req, res) => {
-  const posts = await db.getAllClubMessages();
+  let posts = await db.getAllClubMessages();
+  // convert to html
+  posts.content = posts.map((post)=> post.content = markdown.toHTML(post.content));
   const postsDetails = (posts.length> 0)? await Promise.all(
     posts?.map(async (post) => {
       const club = await db.getClubById(post.club_id);
@@ -47,8 +48,9 @@ exports.clubGet = async (req, res) => {
 exports.getClubPage = async (req, res, next) => {
   const club = await db.getClubById(req.params.id);
   const profileImg = await db.getClubImage(req.params.id);
-  const members = await db.getClubMembers(req.params.id);
   const posts = await db.getClubMessages(req.params.id);
+  const members = await db.getClubMembers(req.params.id);
+
   if(!req.user){
     res.render("clubPosts", {
     myClubs:null,
@@ -57,13 +59,17 @@ exports.getClubPage = async (req, res, next) => {
     members: null,
     total_members: members.length,
     isMember:null,
-    posts,
+    posts:[...posts.filter((post)=> post.content)],
     })
     return;
   }
+  const currentUserRole = await db.getUserClubRoles(req.params.id, req.user.id);
   const posts_roles = await Promise.all(
     posts.map(async (post) => {
       const role = await db.getUserClubRoles(req.params.id, post.member_id);
+      // convert to html
+      post.content = markdown.toHTML(post.content);
+      const isOwn = post.member_id === req.user.id;
       return {
         ...post,
         role: role.includes("owner")
@@ -71,6 +77,13 @@ exports.getClubPage = async (req, res, next) => {
           : role.includes("admin")
           ? "admin"
           : "member",
+        priviledge: currentUserRole.includes("owner")
+          ? {edit: true, delete: true}
+          : currentUserRole.includes("admin")
+          ? {edit: true, delete: true}
+          : isOwn
+          ?{edit: true, delete: true}
+          : null
       };
     })
   );
@@ -101,7 +114,7 @@ exports.getClubPage = async (req, res, next) => {
     ];
   }
 
-  res.render("clubPosts", {
+  res.render("clubPosts",{
     myClubs,
     club,
     profileImg,
