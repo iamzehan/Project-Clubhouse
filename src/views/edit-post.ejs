@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/styles2.css" />
+    <title>Document</title>
+    <style>
+      /* This contains the club page content */
+      .club-content {
+        display: flex;
+        width: 100%;
+      }
+      /* Two parts of the page */
+      .club-content-body,
+      .club-members {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* This is the middle portion of the page */
+      .club-content-body {
+        background-color: whitesmoke;
+        width: 80%;
+        min-height: 100vh;
+        padding-bottom: 100px;
+        overflow: scroll;
+        scrollbar-width: none;
+      }
+
+      .club-members {
+        height: 100vh;
+        scrollbar-width: none;
+        overflow-y: scroll;
+        position: sticky;
+        top: 0;
+      }
+
+      /* This only happens when the user is seeing the club page as a public user */
+      .club-content-body.expand {
+        width: 100%;
+      }
+
+      /* This is the part where the other joined clubs show up */
+      .my-clubs {
+        display: flex;
+        padding: 0.5em;
+        overflow-x: auto;
+        width: 100%;
+        gap: 1em;
+      }
+      /* Cards that show clubs the use is a member of*/
+      .my-clubs .club-card {
+        display: flex;
+        flex-direction: column;
+        padding: 0.5em;
+        box-shadow: 0px 2px 5px -2px gray;
+        border-radius: 0.5em;
+        max-width: 120px;
+        background-color: white;
+        gap: 1em;
+        cursor: pointer;
+        transition: 0.3s all ease-in-out;
+
+        img,
+        .img-empty {
+          height: 100px;
+          width: 100px;
+          object-fit: cover;
+          aspect-ratio: 1/1;
+          border-radius: 200px;
+          border: 3px solid var(--secondary-color-light);
+          transition: 0.3s all ease-in-out;
+        }
+        .img-empty {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          border: none;
+          i {
+            background-color: var(--secondary-color);
+            border-radius: 2em;
+            font-size: 1rem;
+            padding: 0.5em;
+          }
+        }
+        .club-name {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-weight: bold;
+          color: var(--primary-color-light);
+        }
+      }
+      /* hover card */
+      .my-clubs a:not(:first-child) .club-card:hover,
+      .my-clubs a:not(:first-child) .club-card.active {
+        box-shadow: 0px 4px 10px -2px var(--primary-color-light);
+        transform: translateY(-5px);
+        img {
+          border-color: red;
+        }
+      }
+      /* Cover photo */
+      .hero-cover {
+        max-height: 200px;
+        width: 100%;
+        position: relative;
+        img {
+          height: 180px;
+          width: 100%;
+          object-fit: cover;
+        }
+        .cover-alt {
+          height: 180px;
+          background-color: gray;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+      /* This contains the title of the club join button and members badge */
+      .hero-banner {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+        color: var(--secondary-color);
+        padding: 1em;
+        padding-top: 50px;
+        border-radius: 0.5em;
+        background-color: white;
+        box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.541);
+      }
+      .hero-banner > .title {
+        flex: 5;
+        text-align: left;
+      }
+      .hero-banner > .members-count {
+        flex: 0.75;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--secondary-color-light);
+        color: white;
+        gap: 0.25em;
+        border-radius: 0.25em;
+        padding: 0.5em;
+        height: 100%;
+        box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.541);
+      }
+      /* join button */
+      .hero-banner > a {
+        flex: 0.75;
+        height: 100%;
+        width: 100%;
+        display: flex;
+      }
+      .hero-banner a > button.primary {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5em;
+        height: 100%;
+        width: 100%;
+        justify-self: flex-end;
+      }
+      /* General Section titles */
+      .section-title {
+        color: var(--secondary-color-light);
+        text-align: left;
+      }
+
+      /* This container contains all the other sections except cover photo */
+      .club-container {
+        padding: 0.25em 0.5em;
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+      }
+      .hero-cover > .club-profile-img {
+        display: flex;
+        height: 120px;
+        width: 120px;
+        aspect-ratio: 1/1;
+        border-radius: 200px;
+        background-color: white;
+        border: 4px solid transparent;
+        margin-left: 2em;
+        z-index: 100px;
+        position: absolute;
+        top: 120px;
+        object-fit: cover;
+        box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.747);
+      }
+
+      /* General card styles */
+      .cards-vibe {
+        background-color: white;
+        border-radius: 0.25em;
+        padding: 0.5em;
+        height: 100%;
+        box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.541);
+      }
+
+      /* Right side bar with members list */
+      .club-members {
+        background-color: #222;
+        width: 20%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2em;
+        padding: 1em;
+        min-width: fit-content;
+      }
+      .club-members-list {
+        display: flex;
+        flex-direction: column;
+        color: white;
+        width: 100%;
+        gap: 0.5em;
+      }
+      .club-members-list > .club-member-list-item {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        gap: 2em;
+        height: 4em;
+        padding: 0 0.5em;
+        border-radius: 0.5em;
+        cursor: pointer;
+        transition: 0.3s background-color ease-in-out;
+        &:hover {
+          background-color: rgba(128, 128, 128, 0.438);
+        }
+      }
+      .club-member-list-item.you {
+        background-color: var(--primary-color);
+      }
+      /* Default member avatar */
+      .club-member-avatar {
+        background-color: gray;
+        color: white;
+        padding: 1em;
+        display: flex;
+        aspect-ratio: 1/1;
+        border-radius: 2em;
+      }
+      .club-member-username {
+        display: flex;
+        align-items: center;
+        gap: 0.25em;
+      }
+      .club-member-badge.owner {
+        color: aqua;
+      }
+      .club-member-badge.admin {
+        color: lightgreen;
+      }
+      header {
+        font-weight: bold;
+      }
+      /* Club posts styles */
+      .club-posts {
+        display: flex;
+        flex-direction: column;
+        align-self: left;
+        gap: 1em;
+      }
+      .club-posts > .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        button#create-post {
+          display: flex;
+          gap: 1em;
+          border-radius: 2em;
+          padding: 0.75em 1em;
+        }
+      }
+
+      dialog#form-dialog {
+        display: none;
+      }
+      dialog[open]#form-dialog {
+        display: flex;
+        width: 500px;
+        aspect-ratio: 1/1;
+        z-index: 1000;
+        border: none;
+        border-radius: 0.75em;
+        padding: 0;
+        &::backdrop {
+          backdrop-filter: 15px;
+          background-color: rgba(0, 0, 0, 0.63);
+        }
+        .section-title {
+          display: flex;
+          padding: 0.25em 0.5em;
+          background-color: #222222cb;
+          border-radius: 0.5em 0.5em 0 0;
+          gap: 0.5em;
+          box-shadow: 0px 2px 5px -2px rgba(128, 128, 128, 0.5);
+          .title-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25em;
+          }
+          .title {
+            font-size: 1.5rem;
+            color: white;
+          }
+          .subtitle {
+            font-size: 0.75rem;
+            color: gray;
+          }
+        }
+        .club-profile-img {
+          display: flex;
+          height: 4rem;
+          width: 4rem;
+          border-radius: 200px;
+          object-fit: cover;
+        }
+        button.close {
+          width: fit-content;
+          aspect-ratio: 1/1;
+          border-radius: 2em;
+          border: none;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: white;
+          font-weight: bolder;
+          font-size: 1.5rem;
+          position: absolute;
+          right: 0.5em;
+          background-color: transparent;
+          &:hover {
+            color: red;
+          }
+        }
+      }
+      dialog[open]#form-dialog form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        gap: 0.5em;
+        margin: 1em;
+        textarea {
+          flex: 1;
+          resize: none;
+          height: 100%;
+          border: none;
+          border-radius: 0.25em;
+          font-family: inherit;
+          font-size: 1rem;
+        }
+        button.primary {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: fit-content;
+          width: fit-content;
+          align-self: flex-end;
+          padding: 0.5em 1em;
+          gap: 0.5em;
+          border-radius: 3em;
+        }
+        textarea:focus {
+          outline-color: transparent;
+        }
+      }
+
+      /* Posts Cards Styles */
+      /* Poster Wrapper */
+      .poster-wrapper {
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 0 1em;
+      }
+
+      /* Avatar */
+      .club-member-avatar {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #6a85b6, #bac8e0);
+        color: #fff;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+      }
+
+      .club-member-avatar i.mi {
+        font-size: 24px;
+      }
+
+      /* Name & Username */
+      .poster-name-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        text-align: left;
+      }
+
+      .full-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--secondary-color-light);
+        text-wrap: nowrap;
+      }
+
+      .username {
+        font-size: 0.85rem;
+        color: #6b7280;
+        text-wrap: nowrap;
+        display: flex;
+        gap: 0.25em;
+      }
+
+      /* Post Date */
+      .post-date {
+        margin-left: auto;
+        font-size: 0.8rem;
+        color: #9ca3af;
+        white-space: nowrap;
+      }
+
+      /* Post Content */
+      .post-content {
+        margin-top: 0.75rem;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: #374151;
+        word-wrap: break-word;
+        text-align: justify;
+        padding: 0 2em;
+      }
+      .club-posts {
+        anchor-name: --posts;
+      }
+      .club-posts button#create-post {
+        position-anchor: --posts;
+        position: fixed;
+        right: anchor(right);
+        bottom: 20px;
+        background-color: #242424;
+        border: 1px solid #242424;
+        z-index: 1000;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" style="background-color: whitesmoke;">
+      <main class="content">
+        <!-- Form dialog to create posts-->
+        <dialog
+          class="club-posts form-dialog cards-vibe"
+          style="height: fit-content"
+          id="form-dialog"
+          open
+        >
+          <div class="section-title dialog" style="justify-content: flex-start">
+            <img
+              src="<%= profileImg%>"
+              alt="profile-img"
+              class="club-profile-img"
+            />
+            <div class="title-wrapper">
+              <p class="title"><%=club?.name%></p>
+              <p class="subtitle">Update this post</p>
+            </div>
+            <button class="close" onclick="takeMeBack(<%-post.club_id%>)"><i class="mi">close</i></button>
+          </div>
+          <form action="/clubs/post/update" , method="POST">
+            <input type="hidden" name="_csrf" value="<%=csrfToken%>" />
+            <input type="hidden" name="post_id" value="<%=post.id%>" />
+            <input type="hidden" name="club_id" value="<%=post.club_id%>" />
+            <textarea
+              name="content"
+              id="content"
+              placeholder="Write your update here"
+              required
+            ><%=post.content%></textarea>
+            <button class="primary" type="submit">
+              Update<i class="mi">update</i>
+            </button>
+          </form>
+        </dialog>
+      </main>
+    </div>
+    <!-- Live reload -->
+    <% if (process.env.NODE_ENV !== 'production') { %>
+    <script src="http://localhost:35729/livereload.js"></script>
+    <% } %>
+    <script>
+    
+      function takeMeBack(id){
+        window.location.href = `/clubs/${id}`
+      }
+    </script>
+  </body>
+</html>

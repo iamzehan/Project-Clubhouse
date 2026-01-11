@@ -1,5 +1,5 @@
 <ul class="post-menu-list cards-vibe" id="list-<%=post_id%>">
-  <a href="/<%=club_id%>/post/edit/<%=post_id%>">Edit</li></a>
+  <a href="/clubs/<%=club_id%>/post/edit/<%=post_id%>">Edit</li></a>
   <li>
     <form action="/post/delete" method="POST">
         <input type="hidden" name="_csrf" value="<%=csrfToken%>" />

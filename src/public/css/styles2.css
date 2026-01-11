@@ -271,6 +271,13 @@ a.nav-link.user {
     gap: 0.25em;
     color: var(--primary-color);
   }
+  textarea{
+    min-height: 300px;
+    width: 100%;
+    resize: none;
+    font-family: inherit;
+    border: none;
+  }
   input,
   button,
   a {
