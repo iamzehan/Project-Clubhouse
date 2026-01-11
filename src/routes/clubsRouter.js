@@ -23,3 +23,6 @@ clubsRouter.get("/:club_id/post/edit/:post_id", authController.ensureAuth, contr
 clubsRouter.post(
     "/post/update", 
     authController.ensureAuth, controller.editClubMessagePOST);
+
+// delete a post
+clubsRouter.post("/post/delete", authController.ensureAuth, controller.deleteClubMessagePOST);

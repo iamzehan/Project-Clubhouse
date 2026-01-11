@@ -395,3 +395,10 @@ exports.updateClubPost = async(postId,clubId, content) => {
   const {rows} = await pool.query(SQL, [postId, clubId, content]);
   return rows.length > 0;
 }
+
+// delete a post
+exports.deleteClubPost = async(postId, clubId) => {
+  const SQL = `DELETE from club_posts WHERE id=$1 AND club_id=$2 RETURNING *`;
+  const {rows} = await pool.query(SQL, [postId, clubId]);
+  return rows.length > 0;
+}
