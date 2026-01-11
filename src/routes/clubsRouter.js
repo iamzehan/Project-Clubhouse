@@ -17,3 +17,9 @@ clubsRouter.get("/:id", controller.getClubPage);
 // Post something
 clubsRouter.post("/:id", authController.ensureAuth, controller.createClubMessagePOST);
 module.exports = clubsRouter;
+
+// Edit a post
+clubsRouter.get("/:club_id/post/edit/:post_id", authController.ensureAuth, controller.editClubMessageGET);
+clubsRouter.post(
+    "/post/update", 
+    authController.ensureAuth, controller.editClubMessagePOST);

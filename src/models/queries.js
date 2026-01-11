@@ -381,3 +381,17 @@ exports.getUserProfile = async(userId) => {
   const {rows} = await pool.query(SQL, [userId]);
   return rows[0];
 }
+
+// get a post
+exports.getClubPost = async(clubId, postId) => {
+  const SQL = `SELECT * FROM club_posts WHERE club_id=$1 AND id=$2`;
+  const {rows} = await pool.query(SQL, [clubId, postId]);
+  return rows[0];
+}
+
+// update a post
+exports.updateClubPost = async(postId,clubId, content) => {
+  const SQL = `UPDATE club_posts SET content=$3 WHERE id=$1 AND club_id=$2 RETURNING *`;
+  const {rows} = await pool.query(SQL, [postId, clubId, content]);
+  return rows.length > 0;
+}
