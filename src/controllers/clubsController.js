@@ -9,31 +9,44 @@ const formatPostDate = require("../utils/formatDate");
 exports.inboxGET = async (req, res) => {
   let posts = await db.getAllClubMessages();
   // convert to html
-  posts.content = posts.map((post)=> post.content = markdown.toHTML(post.content));
-  const postsDetails = (posts.length> 0)? await Promise.all(
-    posts?.map(async (post) => {
-      const club = await db.getClubById(post.club_id);
-      const isMember = (req.user)? await db.isUserClubMember(post.club_id, req.user.id):null;
-      const row = {...post, isMember, club_name: club.name};
-      if (isMember) {
-        const role = await db.getUserClubRoles(post.club_id, post.user_id);
-        const user = await db.getUserById(post.user_id);
-        const userProfile = await db.getUserProfile(post.user_id);
-        row.formattedDate = formatPostDate(post.created_at);
-        row.first_name = userProfile.first_name;
-        row.last_name = userProfile.last_name;
-        row.username = user.username;
-        row.role = role.includes("owner")
-          ? "owner"
-          : role.includes("admin")
-          ? "admin"
-          : "member";
-      }
-      return row;
-    })
-  ):null;
+  posts.content = posts.map(
+    (post) => (post.content = markdown.toHTML(post.content))
+  );
+  const postsDetails =
+    posts.length > 0
+      ? await Promise.all(
+          posts?.map(async (post) => {
+            const club = await db.getClubById(post.club_id);
+            const isMember = req.user
+              ? await db.isUserClubMember(post.club_id, req.user.id)
+              : null;
+            const row = { ...post, isMember, club_name: club.name };
+            if (isMember) {
+              const role = await db.getUserClubRoles(
+                post.club_id,
+                post.user_id
+              );
+              const user = await db.getUserById(post.user_id);
+              const userProfile = await db.getUserProfile(post.user_id);
+              row.formattedDate = formatPostDate(post.created_at);
+              row.first_name = userProfile.first_name;
+              row.last_name = userProfile.last_name;
+              row.username = user.username;
+              row.role = role.includes("owner")
+                ? "owner"
+                : role.includes("admin")
+                ? "admin"
+                : "member";
+            }
+            return row;
+          })
+        )
+      : null;
   // res.json(posts_members)
-  res.render("inbox", {title: req.user? "Inbox":"Posts",posts: postsDetails});
+  res.render("inbox", {
+    title: req.user ? "Inbox" : "Posts",
+    posts: postsDetails,
+  });
 };
 // get available clubs
 exports.clubGet = async (req, res) => {
@@ -51,16 +64,16 @@ exports.getClubPage = async (req, res, next) => {
   const posts = await db.getClubMessages(req.params.id);
   const members = await db.getClubMembers(req.params.id);
 
-  if(!req.user){
+  if (!req.user) {
     res.render("clubPosts", {
-    myClubs:null,
-    club,
-    profileImg,
-    members: null,
-    total_members: members.length,
-    isMember:null,
-    posts:[...posts.filter((post)=> post.content)],
-    })
+      myClubs: null,
+      club,
+      profileImg,
+      members: null,
+      total_members: members.length,
+      isMember: null,
+      posts: [...posts.filter((post) => post.content)],
+    });
     return;
   }
   const currentUserRole = await db.getUserClubRoles(req.params.id, req.user.id);
@@ -78,12 +91,12 @@ exports.getClubPage = async (req, res, next) => {
           ? "admin"
           : "member",
         priviledge: currentUserRole.includes("owner")
-          ? {edit: true, delete: true}
+          ? { edit: true, delete: true }
           : currentUserRole.includes("admin")
-          ? {edit: true, delete: true}
+          ? { edit: true, delete: true }
           : isOwn
-          ?{edit: true, delete: true}
-          : null
+          ? { edit: true, delete: true }
+          : null,
       };
     })
   );
@@ -114,7 +127,7 @@ exports.getClubPage = async (req, res, next) => {
     ];
   }
 
-  res.render("clubPosts",{
+  res.render("clubPosts", {
     myClubs,
     club,
     profileImg,
@@ -138,8 +151,29 @@ exports.createClubMessagePOST = async (req, res) => {
   res.redirect(`/clubs/${req.params.id}`);
 };
 
-// CREATE A CLUB
+// EDIT A MESSAGE/POST OF THE CLUB
+// get requrest
+exports.editClubMessageGET = async (req, res) => {
+  const { club_id, post_id } = req.params;
+  const post = await db.getClubPost(club_id, post_id);
+  const profileImg = await db.getClubImage(club_id);
+  const club = await db.getClubById(club_id);
+  // res.json({...post});
+  res.render("edit-post", { post, profileImg, club });
+};
 
+// update a post
+exports.editClubMessagePOST = async (req, res) => {
+  const { post_id, club_id, content } = req.body;
+  const isUpdated = await db.updateClubPost(post_id, club_id, content);
+  if (isUpdated) {
+    res.redirect(`/clubs/${club_id}`);
+  } else {
+    res.status(401).json({ error: "Server Error" });
+  }
+};
+
+// CREATE A CLUB
 // get request
 exports.createClubGet = async (req, res) => {
   res.render("createClub", { error: null });
@@ -177,7 +211,7 @@ exports.createClubPost = async (req, res) => {
 
     // 5. Optional: Add secret
     if (secret && secret.trim() !== "") {
-      const secret_hash = await bcrypt.hash(secret, 10)
+      const secret_hash = await bcrypt.hash(secret, 10);
       await db.createClubSecret(clubId, secret_hash);
     }
 
