@@ -99,7 +99,7 @@
         }
       }
       /* hover card */
-      .my-clubs a:not(:first-child) .club-card:hover {
+      .my-clubs a:not(:first-child) .club-card:hover, .my-clubs a:not(:first-child) .club-card.active {
         box-shadow: 0px 4px 10px -2px var(--primary-color-light);
         transform: translateY(-5px);
         img {
@@ -550,12 +550,12 @@
                       <span class="club-name">New Club</span>
                     </div>
                   </a>
-                  <% myClubs?.forEach((club)=> {%>
-                  <a href="/clubs/<%=club.id%>" class="href">
-                    <div class="club-card" style="position: relative">
-                      <img src="<%= club.image_url %>" alt="club_img" />
-                      <span class="club-name"><%= club.name %></span>
-                      <% if(club.user_role==="owner"){ %>
+                  <% myClubs?.forEach((myClub)=> {%>
+                  <a href="/clubs/<%=myClub.id%>" class="href">
+                    <div class="club-card  <%=(myClub.id===club.id)?'active':''%>" style="position: relative">
+                      <img src="<%= myClub.image_url %>" alt="club_img" />
+                      <span class="club-name"><%= myClub.name %></span>
+                      <% if(myClub.user_role==="owner"){ %>
                       <span
                         class="club-member-badge owner"
                         style="position: absolute; right: 0.5em"
