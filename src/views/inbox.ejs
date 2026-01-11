@@ -159,7 +159,7 @@
                 <%posts?.forEach(post=>{%>
                 <div class="club-posts cards-vibe">
                   <!-- Club name -->
-                <div class="section-title"><a href="/clubs/<%=post.club_id%>"><%=post.club_name%></a></div>
+                <div class="section-title"></div>
                   <!-- Avatar -->
                   <div class="poster-wrapper" style="display: flex; gap: 2em">
                     <span class="club-member-avatar" style="width: fit-content"
@@ -167,10 +167,11 @@
                     </span>
                     <!-- Poster name and username -->
                     <div class="poster-name-wrapper">
-                      <p class="full-name">
+                      <p class="full-name" style="display: flex; align-items: center; gap:1em">
                         <%=(post.isMember)?post.first_name+ ' ' + post.last_name : 'Anonymous'%>
+                        <i class="mi">chevron_right</i> <a style="color: var(--primary-color); text-decoration: underline;" href="/clubs/<%=post.club_id%>"><%=post.club_name%></a>
                       </p>
-                      <p class="username">@ <%=(post.isMember)?post.username : 'anonymous'%>
+                      <p class="username" style="display: flex; align-items: center;">@ <%=(post.isMember)?post.username : 'anonymous'%>
                       <!-- BADGE -->
                       <% if(post.role==="owner" && post.isMember){ %>
                         <span class="club-member-badge owner"

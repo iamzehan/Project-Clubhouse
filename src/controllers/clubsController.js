@@ -63,7 +63,10 @@ exports.getClubPage = async (req, res, next) => {
   const profileImg = await db.getClubImage(req.params.id);
   const posts = await db.getClubMessages(req.params.id);
   const members = await db.getClubMembers(req.params.id);
-
+  // convert to html
+  posts.content = posts.map(
+    (post) => (post.content = markdown.toHTML(post.content))
+  );
   if (!req.user) {
     res.render("clubPosts", {
       myClubs: null,
@@ -80,8 +83,6 @@ exports.getClubPage = async (req, res, next) => {
   const posts_roles = await Promise.all(
     posts.map(async (post) => {
       const role = await db.getUserClubRoles(req.params.id, post.member_id);
-      // convert to html
-      post.content = markdown.toHTML(post.content);
       const isOwn = post.member_id === req.user.id;
       return {
         ...post,
