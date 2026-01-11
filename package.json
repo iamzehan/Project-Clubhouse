@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "create_session": "node ./src/models/session.js",
-    "create_tables":"node ./src/models/createTables.js",
+    "create_tables": "node ./src/models/createTables.js",
     "create_db": "npm run create_session && npm run create_tables",
     "start": "node ./src/app.js",
     "dev": "nodemon ./src/app.js",
@@ -29,6 +29,7 @@
     "csurf": "^1.2.2",
     "express-session": "^1.18.2",
     "livereload": "^0.10.3",
+    "markdown": "^0.5.0",
     "nodemon": "^3.1.11",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
